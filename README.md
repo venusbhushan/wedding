@@ -1,39 +1,30 @@
-# Venus & Payal — wedding and travel
+# Venus & Payal — a Madhubani wedding
 
-A mobile-friendly React + TypeScript website inspired by the couple’s Madhubani invitation.
+A responsive React + TypeScript wedding website for **30 November 2026**, with a wedding-only countdown (midnight IST), groom/bride celebration plans, and a Madhubani invitation theme.
 
-- Wedding countdown to **30 November 2026, midnight IST (UTC+05:30)**.
-- Groom-side and bride-side celebration plans.
-- Baraat from Begusarai to Muzaffarpur on 30 November at noon, returning on 1 December.
-- Google Maps directions, optional starting location, transport choices, station-to-venue links, and copyable addresses.
-- Reception details are configured in `src/travel.ts`; its date currently awaits confirmation because the invitation and requested schedule differ.
+## Travel guide
 
-## Run locally
+Choose from all 28 Indian states plus Delhi. Flight cards cover Patna (PAT) and Darbhanga (DBR); rail cards cover Begusarai (BGS), Barauni Junction (BJU), and Muzaffarpur Junction (MFP). Nearby gateways, connection ideas and onward transfers are explicitly identified. No maps are embedded or linked.
 
-Requires Node.js 22.13 or later.
+The guide is a sourced snapshot researched on 1 October 2026, **not live seat availability**. It shows selected services rather than every train or flight. Fares, operating dates, flight numbers and departure times must be checked with the linked booking or schedule providers. See [RESEARCH.md](RESEARCH.md) for sources, discrepancies and maintenance notes.
+
+## Run
+
+Node.js 22.13 or newer:
 
 ```sh
 npm ci
 npm run dev
-```
-
-## Build
-
-```sh
+npm test
 npm run build
-npm run preview
 ```
 
-## Vercel
+Vercel: Vite preset, build `npm run build`, output `dist`, repository root. No environment variables or backend required. Pushes to main use the existing Vercel integration.
 
-Import this repository with the **Vite** preset. Build command: `npm run build`; output directory: `dist`; root directory: repository root. No environment variables or backend services are required.
+## Edit
 
-## Personalize
-
-- Wedding countdown and celebration plans: `src/App.tsx`
-- Addresses, reception date and map helpers: `src/travel.ts`
-- Colors and responsive layout: `src/styles.css`
-- Title and metadata: `index.html`
-- Responsive Madhubani artwork and favicon: `public/`
-
-The Begusarai map link opens the invitation’s locality, not a verified house pin. Route times and transport availability are provided by Google Maps. Countdown ticking pauses when the tab is hidden.
+- `src/routes.ts`: capital cities, gateways, sourced airline and train records.
+- `src/travel.ts`: venue and reception details (reception date still awaits confirmation).
+- `src/App.tsx`: countdown and guest experience.
+- `src/styles.css`: responsive Madhubani design.
+- `public/`: invitation artwork and favicon.

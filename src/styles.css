@@ -1,146 +1,19 @@
-:root { --paper:#fbf4df; --surface:#fffcf1; --ink:#302c23; --muted:#756b58; --red:#962e22; --green:#254e3c; --line:#ded0af; --gold:#a67f3b; color-scheme:light; font-family:Arial,Helvetica,sans-serif; color:var(--ink); background:var(--paper); }
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; scroll-padding-top:20px; -webkit-text-size-adjust:100%; }
-body { margin:0; font-size:1rem; line-height:1.55; }
-button,input,select { font:inherit; }
-button,a,input,select { -webkit-tap-highlight-color:transparent; }
-a { color:inherit; }
-button { cursor:pointer; }
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { outline:3px solid var(--green); outline-offset:4px; }
-::selection { background:var(--red); color:var(--paper); }
-h1,h2,h3,h4,p { margin:0; }
-h1,h2,h3,h4 { font-family:Georgia,'Times New Roman',serif; font-weight:400; line-height:1.2; overflow-wrap:anywhere; }
-.site-shell { max-width:1440px; padding:0 max(24px,env(safe-area-inset-right)) 0 max(24px,env(safe-area-inset-left)); margin:auto; }
-.site-nav { height:84px; display:flex; align-items:center; justify-content:space-between; gap:24px; border-bottom:1px solid var(--line); }
-.wordmark { font:1.7rem Georgia,serif; text-decoration:none; color:var(--red); letter-spacing:2px; }
-.wordmark span { font-size:1.1rem; font-style:italic; }
-.site-nav nav { display:flex; gap:30px; font-size:.875rem; }
-.site-nav nav a { text-decoration:none; padding-block:12px; }
-.site-nav nav a:hover { color:var(--red); text-decoration:underline; text-underline-offset:6px; }
-.nav-date { font-size:.75rem; letter-spacing:2px; color:var(--muted); }
-.invitation-hero { position:relative; margin:24px auto 0; max-width:1320px; isolation:isolate; }
-.invitation-art { width:100%; height:auto; display:block; }
-.hero-copy { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; width:55%; margin:auto; padding:20px 0; }
-.blessing { color:var(--red); font:1.25rem 'Devanagari Sangam MN',Georgia,serif; margin-bottom:14px; }
-h1 { font-size:clamp(2.5rem,5.3vw,4.8rem); color:#92251a; letter-spacing:-2px; }
-h1 span { font-size:.65em; font-style:italic; }
-.hero-date { font-size:1rem; margin:15px 0 13px; letter-spacing:1px; }
-.hometowns { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:15px; font-size:.875rem; color:var(--green); }
-.hometowns > span:nth-child(2) { font-size:.5rem; color:var(--gold); }
-.countdowns { max-width:980px; margin:28px auto 0; padding:21px 34px; border-block:1px solid var(--line); }
-.countdown { display:grid; grid-template-columns:1fr 1.35fr; align-items:center; gap:24px; }
-.countdown-label h2 { font-size:1.85rem; color:var(--red); }
-.countdown-label time { display:block; margin-top:6px; font-size:1rem; color:var(--muted); }
-.timer { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; text-align:center; }
-.unit { display:flex; flex-direction:column; min-width:0; gap:7px; }
-.unit strong { font:400 clamp(2rem,3.4vw,3rem)/1 Georgia,serif; color:var(--red); font-variant-numeric:tabular-nums; }
-.unit > span { font-size:.875rem; color:var(--muted); }
-.countdown-note { text-align:center; font-size:.75rem; color:var(--muted); margin:12px 0 0; }
-.event-status { grid-column:1/-1; text-align:center; color:var(--red); }
-.journey-section,.venues-section { max-width:1180px; margin:70px auto 0; }
-.section-heading { text-align:center; margin-bottom:28px; }
-.eyebrow { display:block; font-size:.75rem; color:var(--gold); letter-spacing:1.9px; font-weight:600; }
-.section-heading h2 { margin-top:10px; color:var(--red); font-size:clamp(1.8rem,3.2vw,2.6rem); }
-.side-selector { padding:0; margin:0 auto 30px; border:0; display:grid; grid-template-columns:1fr 1fr; gap:15px; max-width:700px; }
-.side-option { display:flex; gap:16px; align-items:center; position:relative; min-width:0; cursor:pointer; padding:17px 23px; border:1px solid var(--line); background:var(--surface); border-radius:4px; }
-.side-option.selected { color:var(--paper); border-color:var(--red); background:var(--red); }
-.side-option:not(.selected):hover { border-color:var(--red); }
-.side-option:has(input:focus-visible),.mode:has(input:focus-visible) { outline:3px solid var(--green); outline-offset:4px; }
-.side-option input,.mode input,.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-.side-initial { display:grid; place-items:center; width:44px; height:44px; flex-shrink:0; border:1px solid currentColor; border-radius:50%; font:1.65rem Georgia,serif; }
-.side-option strong { display:block; font-size:1rem; }
-.side-option small { display:block; font-size:.875rem; margin-top:2px; opacity:.85; }
-.selection-mark { margin-left:auto; font-size:1.25rem; }
-.journey-layout { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:28px; align-items:start; }
-.itinerary { background:var(--surface); border:1px solid var(--line); border-top:3px solid var(--red); padding:30px 34px; border-radius:3px; }
-.panel-heading { padding-bottom:28px; border-bottom:1px solid var(--line); }
-.panel-heading h3,.travel-panel h3 { font-size:1.9rem; color:var(--red); margin-top:9px; }
-.timeline { list-style:none; padding:0; margin:29px 0 0; }
-.timeline li { display:grid; grid-template-columns:40px minmax(0,1fr); gap:18px; position:relative; padding-bottom:31px; }
-.timeline li:last-child { padding-bottom:0; }
-.timeline li:not(:last-child)::before { content:''; position:absolute; width:1px; left:19px; top:43px; bottom:8px; background:var(--line); }
-.step-number { display:grid; place-items:center; height:39px; border:1px solid #c5af87; border-radius:50%; color:var(--red); font:1rem Georgia,serif; }
-.step-date { font-size:.75rem; color:var(--red); font-weight:600; letter-spacing:1px; margin:0 0 7px; }
-.timeline h4 { font-size:1.35rem; }
-.step-location { font-size:.875rem; color:var(--green); margin:6px 0; font-weight:600; }
-.step-detail { font-size:1rem; color:var(--muted); line-height:1.65; }
-.text-link { display:inline-flex; align-items:center; gap:9px; font-size:.875rem; font-weight:600; color:var(--red); text-decoration:none; min-height:44px; margin-top:4px; }
-.text-link:hover { text-decoration:underline; text-underline-offset:5px; }
-.text-link svg { width:16px; }
-.travel-panel { border:1px solid var(--line); border-top:3px solid var(--green); padding:28px; border-radius:3px; background:#f2ead5; position:sticky; top:24px; }
-.planner-icon { display:grid; place-items:center; border:1px solid #b9c1a4; border-radius:50%; width:40px; height:40px; color:var(--green); margin-bottom:16px; }
-.travel-panel h3 { color:var(--green); margin-bottom:22px; }
-.travel-panel form > label { display:block; font-weight:600; font-size:.875rem; margin:18px 0 8px; }
-.travel-panel form > label span { font-weight:400; color:var(--muted); }
-.travel-panel select,.travel-panel input:not([type=radio]) { width:100%; min-width:0; min-height:48px; padding:11px 12px; border:1px solid #c9bda0; background:var(--surface); border-radius:3px; color:var(--ink); font-size:1rem; }
-.travel-panel input::placeholder { color:#887e6b; }
-.mode-selector { border:0; padding:0; margin:20px 0; display:flex; flex-wrap:wrap; gap:8px; }
-.mode-selector legend { font-weight:600; font-size:.875rem; margin-bottom:9px; }
-.mode { display:flex; flex:1 1 135px; align-items:center; justify-content:center; gap:7px; min-height:46px; padding:10px 8px; border:1px solid #c9bda0; border-radius:3px; cursor:pointer; background:var(--surface); font-size:.875rem; position:relative; }
-.mode.active { border-color:var(--green); background:#e4eadb; color:#173d2b; }
-.mode svg { flex-shrink:0; width:19px; }
-.primary-button,.secondary-button { display:flex; align-items:center; justify-content:center; gap:16px; padding:12px 16px; min-height:48px; text-decoration:none; border-radius:3px; font-size:.875rem; font-weight:600; }
-.primary-button { color:#fff8e9; background:var(--red); border:1px solid var(--red); width:100%; }
-.primary-button:hover { background:#7d241c; }
-.primary-button svg { margin-left:auto; }
-.form-note { font-size:.75rem; color:var(--muted); margin-top:12px; line-height:1.6; }
-.station-link { display:flex; gap:12px; border-top:1px solid #d7c9a9; padding-top:21px; margin-top:25px; color:var(--green); }
-.station-link svg { flex-shrink:0; margin-top:3px; }
-.station-link strong { display:block; font-size:.875rem; margin-bottom:4px; }
-.station-link a { display:inline-block; padding-block:6px; font-size:.875rem; text-underline-offset:4px; }
-.venue-grid { display:grid; grid-template-columns:1fr 1fr; gap:25px; }
-.venue-card { background:var(--surface); border:1px solid var(--line); padding:28px; border-radius:3px; }
-.venue-top { display:flex; justify-content:space-between; gap:12px; color:var(--green); align-items:center; }
-.venue-kicker { font-size:.75rem; letter-spacing:1.7px; font-weight:600; }
-.venue-card h3 { color:var(--red); font-size:1.7rem; margin:20px 0 7px; }
-.venue-city { font-size:.875rem; color:var(--green); font-weight:600; }
-.venue-card address { font-style:normal; color:var(--muted); font-size:1rem; margin:13px 0; }
-.venue-time { font-size:.875rem; padding-bottom:20px; line-height:1.6; }
-.venue-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding-top:19px; border-top:1px solid var(--line); }
-.secondary-button { color:var(--red); border:1px solid #ba8c75; }
-.secondary-button:hover { background:#f9ecdc; }
-.copy-button { display:flex; gap:8px; align-items:center; background:none; border:0; min-height:44px; padding:8px 10px; color:var(--muted); font-size:.875rem; }
-.copy-button:hover { color:var(--red); }
-.copy-error { font-size:.875rem; color:var(--red); margin-top:12px; }
-.venue-note { font-size:.75rem; color:var(--muted); margin:17px 0 0; text-align:center; line-height:1.7; }
-.site-footer { margin:60px auto 0; max-width:1320px; padding:25px 0 max(30px,env(safe-area-inset-bottom)); border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:20px; }
-.site-footer p { font:1.5rem Georgia,serif; color:var(--red); }
-.site-footer p span { font-style:italic; }
-.site-footer > span { font-size:.75rem; color:var(--muted); letter-spacing:1px; }
-.skip-link { position:absolute; left:20px; top:-90px; z-index:20; background:var(--red); color:white; padding:14px 20px; }
-.skip-link:focus { top:12px; }
-@media (max-width:1000px) { .hero-copy { width:57%; } .blessing { margin-bottom:6px; font-size:1rem; } .hero-date { margin:8px 0; } .journey-layout { gap:20px; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); } .itinerary { padding:25px; } .travel-panel { padding:23px; } .panel-heading h3,.travel-panel h3 { font-size:1.65rem; } }
-@media (max-width:800px) { .journey-layout { grid-template-columns:minmax(0,1fr); } .travel-panel { position:static; } .venue-grid { grid-template-columns:minmax(0,1fr); } .travel-panel form { max-width:100%; } .countdowns { padding-inline:10px; } .unit strong { font-size:2.5rem; } .site-nav nav { gap:20px; } }
-@media (max-width:650px) {
- .site-shell { padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right)); }
- .site-nav { height:68px; gap:10px; } .wordmark { font-size:1.4rem; white-space:nowrap; } .nav-date { display:none; } .site-nav nav { font-size:.875rem; gap:17px; }
- .invitation-hero { margin-top:15px; border:1px solid var(--line); background:#fff5d4; }
- .hero-copy { position:static; width:100%; padding:20px 8px 25px; }
- h1 { font-size:clamp(2.5rem,10.5vw,3.6rem); letter-spacing:-1.3px; }
- .blessing { font-size:1.1rem; margin-bottom:8px; }
- .hero-date { margin:10px 0; }
- .countdowns { margin-top:20px; padding:18px 6px; }
- .countdown { grid-template-columns:minmax(0,1fr); gap:18px; text-align:center; }
- .countdown-label { display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; }
- .countdown-label h2 { font-size:1.5rem; }
- .countdown-label time { font-size:.875rem; margin:0; }
- .unit strong { font-size:2.5rem; } .timer { gap:8px; max-width:370px; width:100%; margin:auto; }
- .journey-section,.venues-section { margin-top:45px; }
- .section-heading { margin-bottom:23px; } .section-heading h2 { font-size:1.85rem; }
- .side-selector { gap:10px; margin-bottom:22px; }
- .side-option { padding:14px 11px; gap:9px; flex-wrap:wrap; }
- .side-initial { width:32px; height:32px; font-size:1.25rem; }
- .side-option strong { font-size:.875rem; } .side-option small { font-size:.8rem; } .selection-mark { display:none; }
- .itinerary,.travel-panel,.venue-card { padding:22px 18px; }
- .panel-heading { padding-bottom:21px; } .timeline { margin-top:23px; }
- .timeline li { grid-template-columns:30px minmax(0,1fr); gap:12px; }
- .step-number { height:30px; font-size:.875rem; }
- .timeline li:not(:last-child)::before { left:14px; top:35px; }
- .timeline h4 { font-size:1.25rem; }
- .step-detail { font-size:1rem; }
- .venue-card h3 { font-size:1.6rem; }
- .venue-actions { gap:8px; }
- .site-footer { margin-top:40px; flex-direction:column; gap:10px; text-align:center; }
-}
-@media (max-width:350px) { .site-shell { padding-inline:12px; } .side-initial { display:none; } .side-option { justify-content:center; text-align:center; } .site-nav nav { gap:12px; } .unit strong { font-size:2.1rem; } .unit > span { font-size:.8rem; } }
-@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+:root{font-family:Arial,Helvetica,sans-serif;color:#31271e;background:#9d2923;font-synthesis:none;color-scheme:light;--paper:#fff2cf;--cream:#fff9e8;--red:#9d2923;--green:#174b3d;--gold:#eeb844;--line:#d6b17a;--ink:#31271e}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px;-webkit-text-size-adjust:100%}body{margin:0;line-height:1.5}h1,h2,h3,h4,h5,p{margin:0}h1,h2,h3,h4,h5{font-family:Georgia,'Times New Roman',serif;font-weight:400;line-height:1.15}button,input,select{font:inherit}a{color:inherit;text-underline-offset:4px}button{cursor:pointer}button,a,input,select{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #24715e;outline-offset:4px}::selection{background:var(--gold);color:var(--ink)}
+.page-frame{max-width:1600px;margin:12px auto;background:var(--paper);border:3px solid #34291c;outline:2px solid var(--gold);outline-offset:4px;min-height:100vh;width:calc(100% - 30px);box-shadow:inset 0 0 0 4px #fff5ce,inset 0 0 0 7px var(--red)}
+.folk-band{height:21px;border-block:3px solid #38291c;background:conic-gradient(from 45deg,var(--red) 0 25%,var(--gold) 0 50%,var(--green) 0 75%,var(--cream) 0) 0 0/24px 24px;box-shadow:inset 0 0 0 2px #f4dba4}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:19px 4%;border-bottom:1px solid var(--red);margin:0 10px}.wordmark{font:1.8rem Georgia,serif;letter-spacing:2px;text-decoration:none;color:var(--red)}.wordmark em{font-size:1.1rem}.site-nav nav{display:flex;gap:28px;font-size:.85rem;font-weight:600}.site-nav nav a{padding:10px 0;text-decoration:none}.site-nav nav a:hover{color:var(--red);text-decoration:underline}.nav-date{font-size:.75rem;letter-spacing:2px;color:var(--red)}
+.invitation-hero{position:relative;max-width:1320px;margin:26px auto 20px;width:calc(100% - 58px);border:1px solid var(--red);outline:1px solid var(--gold);outline-offset:5px}.invitation-hero>img{display:block;width:100%;height:auto}.hero-copy{position:absolute;inset:0;width:57%;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px}.blessing{font-family:Georgia,serif;font-size:1.35rem;color:var(--red);margin-bottom:10px}.eyebrow{font-size:.65rem;letter-spacing:1.8px;font-weight:700;line-height:1.6;color:var(--red)}h1{font-size:clamp(2.5rem,5.7vw,5rem);color:#93271e;letter-spacing:-2px;margin:13px 0 8px}h1 em{font-size:.68em}.hero-rule{font-size:.75rem;color:var(--green);letter-spacing:4px}.hero-date{font-size:1.05rem;margin:12px 0 8px;letter-spacing:1px}.hometowns{font-size:.9rem;color:var(--green)}.hometowns span{color:var(--red);padding:0 12px}
+.flower{width:72px;height:72px;flex-shrink:0}.flower.small{width:48px;height:48px}.countdown{display:flex;gap:70px;align-items:center;justify-content:center;background:var(--gold);padding:26px 20px;margin:28px 10px 22px;border-block:3px double var(--red);text-align:center}.countdown .eyebrow{color:#693121}.timer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:35px;margin:14px 0 10px}.timer>div{display:flex;flex-direction:column;min-width:0;gap:7px}.timer strong{font:3.5rem/1 Georgia,serif;font-variant-numeric:tabular-nums;color:var(--red)}.timer span{font-size:.7rem;text-transform:uppercase;letter-spacing:1px}.timer-note{font-size:.7rem;color:#593b22}
+.celebration-section,.travel-section,.venues-section{margin:60px auto;max-width:1280px;width:calc(100% - 90px)}.section-title{display:flex;align-items:center;justify-content:center;gap:24px;text-align:center;margin-bottom:28px}.section-title h2{font-size:clamp(1.8rem,3vw,2.6rem);color:var(--red);margin-top:7px}.section-title>div>p:last-child:not(.eyebrow){font-size:.9rem;margin-top:12px;color:#746044}.section-title .flower:last-child{transform:rotate(22deg)}
+.side-selector{display:flex;justify-content:center;gap:0;border:0;padding:0;max-width:450px;margin:0 auto 30px;box-shadow:4px 4px 0 #c6934d}.side-selector label{border:1px solid var(--red);flex:1;text-align:center;padding:12px 20px;cursor:pointer;position:relative;background:var(--cream);color:var(--red)}.side-selector label.selected{background:var(--red);color:var(--cream)}.side-selector label span{display:block;font:1.2rem Georgia,serif}.side-selector small{font-size:.75rem}.side-selector input,.transport-toggle input,.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;padding:0;border:0;margin:-1px}.side-selector label:has(input:focus-visible),.transport-toggle label:has(input:focus-visible){outline:3px solid var(--green);outline-offset:4px;z-index:1}
+.celebration-grid{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--red);background:var(--cream);outline:1px solid var(--red);outline-offset:5px}.celebration-grid li{padding:24px 20px;text-align:center;position:relative;border-right:1px solid #cea56b}.celebration-grid li:last-child{border:0}.step-flower{display:block;font-size:1.9rem;color:var(--green);margin-bottom:8px}.celebration-grid h3{font-size:1.4rem;margin:8px 0 12px;color:var(--red)}.celebration-grid li>p:last-child{font-size:.8rem;color:#6d5840}
+.travel-section{margin-top:70px}.travel-book{border:2px solid #54351e;background:var(--cream);box-shadow:8px 8px 0 #d6aa59;outline:1px solid var(--red);outline-offset:5px}.travel-book-top{display:flex;align-items:center;justify-content:space-between;gap:18px;background:var(--red);color:var(--paper);padding:18px 32px;border-bottom:5px double var(--gold)}.travel-book-top>span:first-child{font:1.3rem Georgia,serif}.travel-book-top>span:nth-child(2){font-size:.7rem;letter-spacing:2px}.travel-book-top .flower{width:35px;height:35px}.travel-controls{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:35px;padding:30px 32px;background:#f4dfac;border-bottom:1px solid #c0995b;align-items:start}.origin-field label,.transport-toggle legend{display:block;font-size:.85rem;font-weight:700;margin-bottom:10px}.origin-field select{width:100%;min-height:50px;background:var(--cream);border:1px solid #8d6338;border-radius:0;padding:10px 35px 10px 14px;font-size:1rem;color:var(--ink)}.origin-field>p{font-size:.7rem;color:#675339;margin-top:8px}.transport-toggle{border:0;padding:0;margin:0;display:flex;gap:8px}.transport-toggle label{display:flex;justify-content:center;align-items:center;flex:1;gap:10px;border:1px solid var(--green);padding:12px 15px;min-height:50px;cursor:pointer;background:var(--cream);position:relative;font-size:.9rem}.transport-toggle label.active{color:var(--paper);background:var(--green);box-shadow:3px 3px 0 #b9904b}.transport-toggle label>span{font-size:1.1rem}.results-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:30px 32px 0}.results-heading h3{font-size:2rem;color:var(--red);margin-top:5px}.results-heading h3>span{color:#927552;font-size:.75em;font-style:italic}.researched{font-size:.65rem;color:#786245;border:1px solid #d5b788;padding:6px 9px;white-space:nowrap}.route-results{padding:16px 32px 28px}.gateway-note{font-size:.82rem;line-height:1.7;color:#695740;margin-bottom:20px}.gateway-note a{margin-left:5px}.gateway-note a>span{margin-left:5px}.flights-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.ticket{border:1px solid #ae7143;position:relative;background:#fffaf0;min-width:0}.flight-ticket{border-top:5px solid var(--red);padding:22px 25px;display:flex;flex-direction:column}.flight-ticket.green-ticket{border-top-color:var(--green)}.ticket-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.travel-symbol{font-size:1.6rem;color:var(--red)}.green-ticket .travel-symbol{color:var(--green)}.ticket h4{font-size:2rem;color:var(--red)}.green-ticket h4{color:var(--green)}.ticket h4>span{font-style:italic;font-size:.6em;color:#8a6d4b}.route-line{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center;padding:22px 0;border-block:1px dashed #c8a570;margin:20px 0}.route-line>div{min-width:0;display:flex;flex-direction:column;gap:5px}.route-line>div:last-child{text-align:right}.route-line strong{font:2rem Georgia,serif;letter-spacing:2px}.route-line>div>span{font-size:.7rem;color:#796445}.route-middle{text-align:center}.route-middle>span{font-size:1rem!important;color:var(--red)!important}.route-middle small{font-size:.6rem;color:#7b6243}.badge{font-size:.62rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;background:#f7e4c2;color:#865120;padding:5px 8px;align-self:flex-start;width:fit-content;line-height:1.6;border:1px solid #dec198}.badge.direct{background:#e7edda;color:var(--green);border-color:#b1c1a1}.carrier{font-weight:600;font-size:.88rem;margin:14px 0 8px}.ticket-note,.route-caveat{font-size:.78rem;color:#766047;line-height:1.7}.route-caveat{margin-top:12px;padding-top:12px;border-top:1px solid #e2cba7}.route-caveat a{font-weight:600}.ticket-bottom{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;border-top:1px dashed #c8a570;padding-top:17px;margin-top:auto}.flight-ticket .ticket-bottom{margin-top:22px}.book-link{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;color:var(--red);text-decoration:none;font-weight:700;font-size:.8rem;min-height:44px}.book-link:hover{text-decoration:underline}.book-link>span{font-size:1.15rem}.ticket-bottom details{font-size:.68rem;color:#80674b;padding-top:12px;max-width:50%}summary{cursor:pointer;min-height:32px}.ticket-bottom details a{display:block;padding-block:7px}.ticket-bottom details p{font-size:.65rem;margin-top:5px}.guide-note{font-size:.75rem;line-height:1.7;color:#7b6449;margin-top:21px}.switch-link{display:block;background:none;border:0;padding:12px 0 0;color:var(--red);font-size:.82rem;font-weight:600;min-height:44px;text-align:left}.travel-book-bottom{border-top:1px solid #d0b182;background:#f4e5c2;text-align:center;font-size:.7rem;color:#795a36;padding:15px 20px;display:flex;gap:15px;justify-content:center;align-items:center}.travel-book-bottom>span{color:var(--red);font-size:1.1rem}
+.trains-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.train-ticket{padding:20px;border-top:5px solid var(--green);display:flex;flex-direction:column}.station-code{font:1.3rem Georgia,serif;color:var(--green);border:1px solid var(--green);padding:5px 9px}.train-ticket .ticket-heading .eyebrow{font-size:.55rem;max-width:130px;text-align:right}.train-ticket h4{font-size:1.6rem;min-height:60px}.train-service{padding-block:14px;border-top:1px dashed #c8a570}.train-number{color:var(--red);font-size:.9rem;letter-spacing:2px;font-weight:bold;margin:14px 0 7px}.train-service h5{font-size:1.25rem;line-height:1.25}.boarding{font-size:.75rem;color:#755d41;line-height:1.8;margin:12px 0}.boarding b{font-size:.67rem;white-space:nowrap}.transfer-note{font-size:.75rem;line-height:1.65;background:#f6e7c8;padding:10px;border-left:2px solid var(--gold);margin:10px 0}.rail-footnote{font-size:.68rem;line-height:1.8;color:#7b6449;border-top:1px dashed #c8a570;padding-top:14px;margin-top:auto}.rail-footnote a{white-space:nowrap}.rail-footnote a>span{margin-left:4px}
+.venue-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;max-width:980px;margin:auto}.venue-grid article{border:3px double var(--green);outline:1px solid var(--red);outline-offset:4px;background:var(--cream);padding:28px 34px;text-align:center}.venue-grid h3{font-size:1.8rem;color:var(--red);margin:12px 0}.venue-city{color:var(--green);font-size:.8rem;font-weight:bold;letter-spacing:1px}.venue-grid address{font-style:normal;font-size:.85rem;line-height:1.7;color:#7a6143;margin-top:14px}.venue-detail{font-size:.75rem;margin-top:12px;color:var(--red)}footer{margin:70px 10px 10px}.footer-art{text-align:center;background:var(--green);color:var(--paper);padding:32px 15px;position:relative}.footer-art:before,.footer-art:after{content:'';position:absolute;top:0;bottom:0;width:180px;background:url('/mithila-celebration-640.webp') center/cover;opacity:.9}.footer-art:before{left:0}.footer-art:after{right:0;transform:scaleX(-1)}.footer-art>p:first-child{font-size:.85rem;color:var(--gold);margin-bottom:10px}.footer-art>p:nth-child(2){font:2.2rem/1.25 Georgia,serif}.footer-art>span{display:block;font-size:.7rem;letter-spacing:1px;margin-top:16px}.skip-link{position:absolute;top:-80px;left:25px;z-index:10;background:var(--green);color:white;padding:12px 18px}.skip-link:focus{top:15px}
+@media(min-width:1500px){h1{font-size:5.3rem}}@media(max-width:1100px){.celebration-section,.travel-section,.venues-section{width:calc(100% - 60px)}.hero-copy .eyebrow{font-size:.55rem}.hero-copy{width:58%}.hero-rule{margin:0}.hero-date{margin:6px 0}.blessing{margin-bottom:4px}.trains-grid{grid-template-columns:1fr}.train-ticket h4{min-height:0;margin-bottom:16px}.train-ticket .ticket-heading .eyebrow{max-width:none}.train-service{display:grid;grid-template-columns:1fr 1fr;column-gap:25px}.train-service .badge,.train-number,.train-service h5{grid-column:1}.train-service .boarding,.train-service .transfer-note{grid-column:2}.train-service .boarding{grid-row:1/3}.train-service .transfer-note{grid-row:3/5}.train-service .book-link{grid-column:1}.rail-footnote{margin-top:10px}.footer-art:before,.footer-art:after{width:100px}.celebration-grid h3{font-size:1.2rem}.ticket h4{font-size:1.7rem}.flight-ticket{padding:20px}.countdown{gap:45px}}
+@media(max-width:760px){.page-frame{width:calc(100% - 20px);margin-block:9px}.site-nav{padding:14px 12px;gap:10px}.site-nav nav{gap:17px;font-size:.75rem}.nav-date{display:none}.wordmark{font-size:1.5rem}.invitation-hero{width:calc(100% - 36px);margin-top:22px}.hero-copy{position:static;width:auto;padding:22px 10px 25px;background:#fff2cf;border-top:1px solid #d3b174}.hero-copy .eyebrow{font-size:.65rem}.blessing{font-size:1.2rem;margin-bottom:8px}h1{font-size:clamp(2.8rem,9vw,4rem);letter-spacing:-1.5px;margin:10px 0}.hero-rule{margin:4px 0}.hero-date{margin:10px 0;font-size:1rem}.hometowns{font-size:.85rem}.countdown{gap:20px;padding:20px 10px;margin-top:22px}.countdown>.flower{width:36px;height:36px}.timer{gap:20px}.timer strong{font-size:2.5rem}.timer span{font-size:.6rem}.countdown .eyebrow{font-size:.6rem;letter-spacing:1px}.section-title{gap:13px}.section-title>.flower{width:28px;height:28px}.section-title h2{font-size:1.8rem}.section-title .eyebrow{font-size:.56rem;letter-spacing:1.2px}.section-title>div>p:last-child:not(.eyebrow){font-size:.8rem}.celebration-section,.travel-section,.venues-section{width:calc(100% - 44px);margin:45px auto}.celebration-grid{grid-template-columns:1fr 1fr}.celebration-grid li{padding:20px 12px}.celebration-grid li:nth-child(2){border-right:0}.celebration-grid li:nth-child(-n+2){border-bottom:1px solid #cea56b}.celebration-grid .eyebrow{font-size:.55rem}.celebration-grid h3{font-size:1.25rem}.side-selector label{padding:12px 10px}.side-selector label span{font-size:1.1rem}.travel-controls{grid-template-columns:1fr;gap:20px;padding:22px 18px}.travel-book-top{padding:14px 18px}.travel-book-top>span:nth-child(2){display:none}.travel-book-top>span:first-child{font-size:1.2rem}.travel-book-top .flower{width:30px;height:30px}.results-heading{padding:23px 18px 0;align-items:flex-start;flex-direction:column;gap:10px}.results-heading h3{font-size:1.8rem}.researched{font-size:.62rem}.route-results{padding:16px 18px 20px}.flights-grid{grid-template-columns:1fr;gap:20px}.ticket h4{font-size:1.85rem}.gateway-note{font-size:.8rem}.venue-grid{grid-template-columns:1fr;gap:25px}.venue-grid article{padding:25px 22px}.footer-art:before,.footer-art:after{width:52px;opacity:.45}.footer-art>p:nth-child(2){font-size:1.8rem;position:relative;z-index:1}.footer-art>span{position:relative;z-index:1}.footer-art{padding-block:30px}footer{margin-top:45px}.travel-book-bottom{font-size:.65rem;padding:12px}.train-service{display:block}.train-ticket{padding:18px}.train-ticket h4{font-size:1.6rem}.trains-grid{gap:20px}}
+@media(max-width:420px){.countdown>.flower{display:none}.countdown{padding-inline:12px}.timer{gap:22px}.section-title>.flower{display:none}.site-nav nav{gap:12px}.celebration-section,.travel-section,.venues-section{width:calc(100% - 32px)}.travel-book{box-shadow:4px 4px 0 #d6aa59}.travel-controls{padding:18px 12px}.results-heading{padding-inline:12px}.route-results{padding-inline:12px}.flight-ticket{padding:17px 13px}.route-line{gap:7px}.route-line strong{font-size:1.75rem}.route-line>div>span{font-size:.65rem}.route-middle small{font-size:.55rem}.ticket-bottom{gap:10px}.ticket-bottom details{font-size:.65rem}.train-ticket .ticket-heading{gap:8px}.train-ticket .ticket-heading .eyebrow{max-width:110px}.page-frame>.folk-band,.folk-band{height:18px}.travel-book-top>span:first-child{font-size:1.1rem}.section-title h2{font-size:1.7rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.local-train-button{border:0;background:none;padding:0}.page-frame{padding-bottom:env(safe-area-inset-bottom)}
