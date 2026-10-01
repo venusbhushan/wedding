@@ -1,11 +1,12 @@
-# Wedding countdown
+# Venus & Payal — wedding and travel
 
-A mobile-friendly React + TypeScript website with Bihar-inspired Madhubani artwork and live countdowns for:
+A mobile-friendly React + TypeScript website inspired by the couple’s Madhubani invitation.
 
-- Engagement: **21 October 2026**
-- Wedding: **30 November 2026**
-
-Both countdowns end at midnight in **India Standard Time (UTC+05:30)**.
+- Wedding countdown to **30 November 2026, midnight IST (UTC+05:30)**.
+- Groom-side and bride-side celebration plans.
+- Baraat from Begusarai to Muzaffarpur on 30 November at noon, returning on 1 December.
+- Google Maps directions, optional starting location, transport choices, station-to-venue links, and copyable addresses.
+- Reception details are configured in `src/travel.ts`; its date currently awaits confirmation because the invitation and requested schedule differ.
 
 ## Run locally
 
@@ -23,21 +24,16 @@ npm run build
 npm run preview
 ```
 
-## Deploy on Vercel
+## Vercel
 
-Import this repository into Vercel and use its **Vite** preset:
-
-- Build command: `npm run build`
-- Output directory: `dist`
-- Root directory: repository root
-
-No environment variables or backend services are required. Deployment is left to the repository owner.
+Import this repository with the **Vite** preset. Build command: `npm run build`; output directory: `dist`; root directory: repository root. No environment variables or backend services are required.
 
 ## Personalize
 
-- Dates and event messages: `src/App.tsx`
+- Wedding countdown and celebration plans: `src/App.tsx`
+- Addresses, reception date and map helpers: `src/travel.ts`
 - Colors and responsive layout: `src/styles.css`
 - Title and metadata: `index.html`
-- Artwork and favicon: `public/`
+- Responsive Madhubani artwork and favicon: `public/`
 
-The page supports browser zoom, phone safe areas, responsive WebP artwork, and reduced work while the tab is hidden. The artwork was generated specifically for this website.
+The Begusarai map link opens the invitation’s locality, not a verified house pin. Route times and transport availability are provided by Google Maps. Countdown ticking pauses when the tab is hidden.
