@@ -14,3 +14,5 @@
 
 @media(max-width:760px){.hero-copy h1{display:block;font-size:27vw;line-height:.82;margin:27px 0 22px;letter-spacing:-.065em}.hero-copy h1>span:last-child{text-align:right;margin-top:17px}.hero-copy h1 i{position:absolute;top:56%;left:4%;font-size:.37em;margin:0}.hero-painting{height:320px}.countdown-caption h2 em{margin-left:0}}
 @media(max-width:380px){.hero-copy h1{font-size:27vw}.hero-painting{height:280px}}
+
+.side-selector .side-name{display:block;font:500 28px/1.2 var(--display);letter-spacing:-.6px;margin-bottom:5px}.portrait{padding:0;appearance:none;background-color:var(--cream);flex-shrink:0;cursor:pointer}.portrait:focus-visible{outline:3px solid var(--red);outline-offset:8px}.portrait[aria-pressed="true"]{box-shadow:0 0 0 2px var(--red)}
