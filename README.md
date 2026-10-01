@@ -28,3 +28,11 @@ Vercel: Vite preset, build `npm run build`, output `dist`, repository root. No e
 - `src/App.tsx`: countdown and guest experience.
 - `src/styles.css`: responsive Madhubani design.
 - `public/`: invitation artwork and favicon.
+
+## Location-aware greeting
+
+`api/greeting.js` reads Vercel's `x-vercel-ip-country` and `x-vercel-ip-country-region` headers. `lib/greeting.mjs` maps Indian states and union territories to one official language per region. International requests, unrecognized regions and network failures display English. Meghalaya, Arunachal Pradesh and Nagaland use English, an official language in each. In multilingual states this is a display default, not a statement about a visitor's language.
+
+Location is approximate (IP-based); VPNs and mobile networks can report a different region. The app requests no GPS permission, sends no location to a third-party API, and stores no location. The endpoint returns only the greeting and language, with private/no-store browser and CDN caching. Only the opening wedding greeting changes language; the rest of the site stays as designed. Local Vite development falls back to English; the geographic headers are available on Vercel.
+
+References: [Vercel request headers](https://vercel.com/docs/headers/request-headers), [Goa official language](https://www.goa.gov.in/department/official-language/), [Mizoram state profile](https://ceo.mizoram.gov.in/state-profile1), [Meghalaya language decision](https://meghalaya.gov.in/meghalaya/sites/default/files/press_release/Press_Release_DIPR_53.pdf).
