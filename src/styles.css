@@ -70,3 +70,12 @@
 .language-settings{background:var(--red);color:var(--cream);padding:28px 24px 32px;text-align:center;border-top:1px solid #fbefd566}.language-settings label{display:block;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}.language-select-wrap{position:relative;max-width:380px;margin:auto}.language-settings select{appearance:none;width:100%;min-height:48px;border:1px solid var(--cream);border-radius:0;background:var(--cream);color:var(--red);padding:12px 48px 12px 14px;font-size:15px;cursor:pointer}.language-select-wrap>span{position:absolute;right:0;top:0;bottom:0;width:44px;display:grid;place-items:center;border-left:1px solid var(--red);color:var(--red);pointer-events:none;font-size:24px}.language-settings p{font-size:11px;line-height:1.6;margin:12px auto 0;max-width:380px}.language-settings .language-status{margin-top:4px;opacity:.8}
 
 .journey-painting{height:auto;aspect-ratio:1}.journey-art{aspect-ratio:1}
+
+/* Painted invitation trim for the journey note. */
+.travel-book-bottom{position:relative;display:flex;align-items:center;justify-content:center;gap:22px;padding:29px 18px;margin-top:14px;border:1px solid var(--red);background:var(--cream);color:var(--red)}
+.travel-book-bottom:before,.travel-book-bottom:after{content:'';position:absolute;left:4px;right:4px;height:8px;background:repeating-linear-gradient(45deg,transparent 0 5px,#a52620 5px 7px,transparent 7px 12px),repeating-linear-gradient(-45deg,transparent 0 5px,#a52620 5px 7px,transparent 7px 12px);border-block:1px solid #a52620}
+.travel-book-bottom:before{top:4px}.travel-book-bottom:after{bottom:4px}
+.travel-book-bottom p{max-width:430px;text-align:center;line-height:1.7}
+.guide-lotus{flex:0 0 43px;width:43px;height:43px;background:url('/mithila-lotus.svg') center/contain no-repeat}
+@media(max-width:760px){.travel-book-bottom{gap:12px;padding:25px 12px}.guide-lotus{flex-basis:32px;width:32px;height:32px}.travel-book-bottom p{font-size:10px}}
+@media(max-width:380px){.travel-book-bottom{gap:7px}.guide-lotus{flex-basis:25px;width:25px;height:29px}}
