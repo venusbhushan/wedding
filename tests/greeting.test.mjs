@@ -27,6 +27,17 @@ test('endpoint uses request location, avoids caching, and excludes location data
  assert.equal(response.statusCode,200);assert.equal(response.body.lang,'kn');
  assert.match(response.headers['Cache-Control'],/no-store/);
  assert.equal(response.headers['Vercel-CDN-Cache-Control'],'no-store');
- assert.deepEqual(Object.keys(response.body).sort(),['lang','text']);
+ assert.deepEqual(Object.keys(response.body).sort(),['bride','groom','invitation','lang','text']);
  handler({method:'POST',headers:{}},response);assert.equal(response.statusCode,405);
+});
+
+test('names and invitation share the greeting language and English fallback',()=>{
+ for(const greeting of Object.values(GREETINGS)) {
+  for(const key of ['groom','bride','invitation']) assert.ok(typeof greeting[key]==='string' && greeting[key].length>0);
+ }
+ assert.equal(greetingForLocation('IN','BR').groom,'वीनस');
+ assert.equal(greetingForLocation('IN','BR').bride,'पायल');
+ assert.equal(greetingForLocation('IN','TN').bride,'பாயல்');
+ assert.equal(greetingForLocation('US','CA').groom,'Venus');
+ assert.equal(greetingForLocation(undefined,undefined).invitation,'With love, you’re invited');
 });
