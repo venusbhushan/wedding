@@ -1,4 +1,4 @@
-import { greetingForLocation } from '../lib/greeting.mjs';
+import { greetingForLocation, originForLocation } from '../lib/greeting.mjs';
 
 export default function handler(request, response) {
  // Never share a location-specific response through a browser or CDN cache.
@@ -9,7 +9,7 @@ export default function handler(request, response) {
   return response.status(405).json({error:'Method not allowed'});
  }
  const headers=request.headers;
- return response.status(200).json(greetingForLocation(
+ return response.status(200).json({...greetingForLocation(
   headers['x-vercel-ip-country'], headers['x-vercel-ip-country-region']
- ));
+ ),originId:originForLocation(headers['x-vercel-ip-country'],headers['x-vercel-ip-country-region'])});
 }

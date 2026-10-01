@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { GREETINGS, REGION_LANGUAGES, greetingForLocation } from '../lib/greeting.mjs';
+import { GREETINGS, REGION_LANGUAGES, greetingForLocation, originForLocation } from '../lib/greeting.mjs';
 import handler from '../api/greeting.js';
 
 test('all 28 states map to a supported greeting',()=>{
@@ -27,7 +27,7 @@ test('endpoint uses request location, avoids caching, and excludes location data
  assert.equal(response.statusCode,200);assert.equal(response.body.lang,'kn');
  assert.match(response.headers['Cache-Control'],/no-store/);
  assert.equal(response.headers['Vercel-CDN-Cache-Control'],'no-store');
- assert.deepEqual(Object.keys(response.body).sort(),['bride','groom','invitation','lang','text']);
+ assert.deepEqual(Object.keys(response.body).sort(),['bride','groom','invitation','lang','originId','text']);
  handler({method:'POST',headers:{}},response);assert.equal(response.statusCode,405);
 });
 
@@ -40,4 +40,13 @@ test('names and invitation share the greeting language and English fallback',()=
  assert.equal(greetingForLocation('IN','TN').bride,'பாயல்');
  assert.equal(greetingForLocation('US','CA').groom,'Venus');
  assert.equal(greetingForLocation(undefined,undefined).invitation,'With love, you’re invited');
+});
+
+test('approximate Indian state selects its capital origin with aliases and safe fallback',()=>{
+ assert.equal(originForLocation('IN','UP'),'up');
+ assert.equal(originForLocation('IN','HP'),'hp');
+ assert.equal(originForLocation('in','IN-KA'),'ka');
+ assert.equal(originForLocation('IN','DL'),'delhi');
+ for(const [code,id] of [['CT','cg'],['TG','ts'],['OR','od'],['UT','uk']]) assert.equal(originForLocation('IN',code),id);
+ for(const [country,region] of [['US','UP'],['IN','XX'],['IN','__proto__'],[null,null]]) assert.equal(originForLocation(country,region),null);
 });
