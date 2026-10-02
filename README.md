@@ -1,4 +1,4 @@
-# Venus & Payal — a Madhubani wedding
+# Payal & Venus — a Madhubani wedding
 
 A responsive React + TypeScript wedding website for **30 November 2026**, with a wedding-only countdown (midnight IST), groom/bride celebration plans, and a Madhubani invitation theme.
 
