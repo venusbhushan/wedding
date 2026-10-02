@@ -36,3 +36,9 @@ Vercel: Vite preset, build `npm run build`, output `dist`, repository root. No e
 Location is approximate (IP-based); VPNs and mobile networks can report a different region. The app requests no GPS permission, sends no location to a third-party API, and stores no location. The endpoint returns only the greeting and language, with private/no-store browser and CDN caching. Only the opening wedding greeting changes language; the rest of the site stays as designed. Local Vite development falls back to English; the geographic headers are available on Vercel.
 
 References: [Vercel request headers](https://vercel.com/docs/headers/request-headers), [Goa official language](https://www.goa.gov.in/department/official-language/), [Mizoram state profile](https://ceo.mizoram.gov.in/state-profile1), [Meghalaya language decision](https://meghalaya.gov.in/meghalaya/sites/default/files/press_release/Press_Release_DIPR_53.pdf).
+
+## Share a language-specific invitation
+
+Add `?lang=hi` for Hindi or `?lang=en` for English, before any section anchor (for example `https://vp-wedddng.vercel.app/?lang=hi#home`). A supported URL language overrides both location detection and a saved browser preference; `?lang=auto` explicitly uses location detection. Without a valid parameter, the saved preference applies, then location detection.
+
+Supported codes: `en`, `hi`, `bn`, `as`, `gu`, `mr`, `kok`, `kn`, `ml`, `ta`, `te`, `or`, `pa`, `ne`, `mni`, `lus`, `ur`. The footer language selector updates the URL so the selected language can be shared. This controls the existing localized greeting, couple’s names and footer invitation; the other components remain as designed. Travel origin still follows approximate location independently of the language.
