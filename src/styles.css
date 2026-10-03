@@ -79,3 +79,6 @@
 .guide-lotus{flex:0 0 43px;width:43px;height:43px;background:url('/mithila-lotus.svg') center/contain no-repeat}
 @media(max-width:760px){.travel-book-bottom{gap:12px;padding:25px 12px}.guide-lotus{flex-basis:32px;width:32px;height:32px}.travel-book-bottom p{font-size:10px}}
 @media(max-width:380px){.travel-book-bottom{gap:7px}.guide-lotus{flex-basis:25px;width:25px;height:29px}}
+
+/* Allow localized countdown captions to wrap on narrow screens. */
+@media(max-width:760px){.countdown-caption{flex-wrap:wrap;gap:12px}.countdown-caption>span{max-width:100%;overflow-wrap:anywhere}}
