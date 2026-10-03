@@ -82,3 +82,11 @@
 
 /* Allow localized countdown captions to wrap on narrow screens. */
 @media(max-width:760px){.countdown-caption{flex-wrap:wrap;gap:12px}.countdown-caption>span{max-width:100%;overflow-wrap:anywhere}}
+
+.ribbon-greeting{font-style:normal;letter-spacing:normal}
+.celebration-grid li.wedding-event{background:var(--red);color:var(--cream);border-block:4px double var(--gold);padding:25px 18px;margin-inline:-18px;box-shadow:4px 4px 0 #c08c48}
+.celebration-grid .wedding-event h3{line-height:1.35;letter-spacing:normal;overflow-wrap:anywhere}
+.celebration-grid .wedding-event .eyebrow{font-size:12px;font-weight:700;color:var(--cream)}
+.celebration-grid li.wedding-event p:last-child{color:var(--cream)}
+.celebration-grid .wedding-event .step-flower{color:var(--gold)}
+@media(max-width:760px){.celebration-grid li.wedding-event{padding:22px 12px;margin-inline:-12px}.celebration-grid .wedding-event .eyebrow{font-size:11px}}
