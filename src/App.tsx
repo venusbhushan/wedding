@@ -54,7 +54,7 @@ function TravelGuide({automaticOrigin}: {automaticOrigin:string|null}) {
  </section>;
 }
 function Celebration({greeting}: {greeting: ReturnType<typeof useLocalInvitation>}) {
- const [side,setSide]=useState<GuestSide>('bride');
+ const [side,setSide]=useState<GuestSide>('groom');
  const steps=side==='groom'?[
  ['28 NOVEMBER','Mehendi','Begusarai'],['30 NOVEMBER','Vivaah','Ratna Banquet & Resort, Muzaffarpur'],['2 DECEMBER','Reception','The groom’s residence, Begusarai']
  ]:[['30 NOVEMBER','A warm welcome','Join Payal’s family in Muzaffarpur'],['30 NOVEMBER','Payal weds Venus','Ratna Banquet & Resort'],['1 DECEMBER','A new beginning','The couple returns to Begusarai'],['RECEPTION','Celebrate once more',`Begusarai · ${RECEPTION.date}`]];
