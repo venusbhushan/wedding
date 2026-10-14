@@ -1,6 +1,9 @@
 import { GREETINGS } from '../lib/greeting.mjs';
 
 export const INVITATION_PHRASES: Record<string, {auspiciousTime:string;together:string;wedding:string}> = {
+ es:{auspiciousTime:'Un momento auspicioso',together:'Juntos',wedding:'Boda'},
+ tr:{auspiciousTime:'Hayırlı an',together:'Birlikte',wedding:'Düğün'},
+ el:{auspiciousTime:'Μια ευλογημένη στιγμή',together:'Μαζί',wedding:'Γάμος'},
  en:{auspiciousTime:'Auspicious moment',together:'Together',wedding:'Wedding'},
  hi:{auspiciousTime:'शुभ घड़ी',together:'संग संग',wedding:'विवाह'},
  bn:{auspiciousTime:'শুভ ক্ষণ',together:'একসাথে',wedding:'বিবাহ'},
