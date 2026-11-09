@@ -1,0 +1,76 @@
+.iift-rsvp {
+ position: fixed;
+ z-index: 5;
+ right: max(16px, env(safe-area-inset-right));
+ bottom: max(16px, env(safe-area-inset-bottom));
+ max-width: calc(100vw - 32px);
+ padding: 4px;
+ border: 2px solid #b9794d;
+ background: #f5e5cf;
+ color: #2a211d;
+ text-decoration: none;
+ box-shadow: 0 6px 24px #38241745;
+}
+.iift-rsvp-inner {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ min-height: 49px;
+ padding: 7px 10px;
+ border: 1px solid #7a5646;
+ background: #fff7e7;
+}
+.iift-rsvp:hover .iift-rsvp-inner { background: #f4dfc2; }
+.iift-rsvp-copy { display: grid; gap: 2px; line-height: 1.16; white-space: nowrap; }
+.iift-rsvp-copy strong { font-size: 18px; font-weight: 700; }
+.iift-rsvp-copy > span { font-size: 13px; font-weight: 700; color: #733e30; }
+.iift-envelope {
+ position: relative;
+ flex: 0 0 48px;
+ height: 31px;
+ background: #d4ad82;
+ border: 1px solid #a77c59;
+}
+.iift-envelope-note {
+ position: absolute;
+ inset: 2px 5px 0;
+ padding-top: 2px;
+ background: #fff8ed;
+ color: #733e30;
+ text-align: center;
+ font: 600 10px Georgia, serif;
+}
+.iift-envelope-fold {
+ position: absolute;
+ inset: 0;
+ background: #e9ccaa;
+ clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+}
+.iift-postage {
+ position: absolute;
+ right: 3px;
+ bottom: 3px;
+ width: 29px;
+ padding: 1px;
+ transform: rotate(7deg);
+ border: 1px dashed #66658e;
+ background: #fff;
+}
+.iift-postage img { display: block; width: 100%; height: auto; }
+.iift-envelope-lift .iift-envelope-note { animation: iift-note-peek .85s ease-in-out both; }
+@keyframes iift-note-peek { 45%, 73% { transform: translateY(-11px) rotate(-7deg); } }
+@media (max-width: 560px) {
+ .iift-rsvp {
+  right: max(10px, env(safe-area-inset-right));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  padding: 3px;
+ }
+ .iift-rsvp-inner { gap: 8px; min-height: 44px; padding: 5px 8px; }
+ .iift-rsvp-copy strong { font-size: 16px; }
+ .iift-rsvp-copy > span { font-size: 12px; }
+ .iift-envelope { flex-basis: 43px; height: 28px; }
+ .iift-postage { width: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+ .iift-envelope-lift .iift-envelope-note { animation: none; }
+}
