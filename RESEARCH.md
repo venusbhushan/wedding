@@ -1,3 +1,11 @@
+## Travel planner update · 10 November 2026
+
+The local planner now lists Darbhanga Airport (DBR) and Muzaffarpur Junction (MFP) as its only arrivals. The previous multi-destination research is retained below as historical context.
+
+- Flight sources include the [Darbhanga route directory](https://www.flightconnections.com/flights-to-darbhanga-dbr), the [Delhi–Darbhanga timetable](https://www.ixigo.com/flight-schedule/new-delhi-darbhanga-del-dbr), and the [Navi Mumbai–Darbhanga timetable](https://www.directflights.com/NMI-DBR). If a nonstop is unverified, guests can search for a connection for their own date.
+- Train listings show named services that stop at MFP. Corrections include [12554 boarding at Aishbagh for Lucknow](https://www.confirmtkt.com/train-schedule/12554) and [15294 boarding at Charlapalli for Hyderabad](https://ncr.indianrailways.gov.in/cris/uploads/files/1759918312292-New%20Train%2015293%20express.pdf).
+- Timetables are planning references. Confirm the departure and arrival dates, and check seats on [IRCTC](https://www.irctc.co.in/nget/train-search).
+
 # Travel research — 1 October 2026
 
 This is a reviewed snapshot of public route information extracted from the pages below, not a live inventory or exhaustive timetable. No fare, seat count, flight number, departure time, or November availability is inferred. Special seasonal trains were excluded where their November operation could not be confirmed.

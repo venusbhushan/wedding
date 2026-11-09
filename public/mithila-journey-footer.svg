@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 0 232 112">
+  <defs>
+    <g id="swastik" fill="#a52620">
+      <path d="M-13 0h26M0-13v26M0-13h13M13 0v13M0 13h-13M-13 0v-13"
+        fill="none" stroke="#a52620" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="-7" cy="-7" r="1.9"/>
+      <circle cx="7" cy="-7" r="1.9"/>
+      <circle cx="-7" cy="7" r="1.9"/>
+      <circle cx="7" cy="7" r="1.9"/>
+    </g>
+    <g id="leaf" stroke="#382b21" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M0 0c-6-3-9-6-10-11l2 1-2-6 3 1-1-6 3 1L0-29l5 9 3-1-1 6 3-1-2 6 2-1C9-6 6-3 0 0z" fill="currentColor" stroke-width="1.3"/>
+      <path d="M0-2v-22m0 16-5-5m5 1 5-5m-5 0-4-5m4 2 3-4" fill="none" stroke="#f2d39a" stroke-width=".85"/>
+    </g>
+    <g id="branch">
+      <path d="M76 76Q65 55 42 48M74 65Q66 42 51 33M75 52Q70 34 65 23" fill="none" stroke="#382b21" stroke-width="1.7" stroke-linecap="round"/>
+      <use href="#leaf" transform="translate(47 50) rotate(-74) scale(.96)" color="#235142"/>
+      <use href="#leaf" transform="translate(59 57) rotate(-108) scale(.83)" color="#3b6c46"/>
+      <use href="#leaf" transform="translate(52 35) rotate(-45) scale(.92)" color="#3b6c46"/>
+      <use href="#leaf" transform="translate(61 45) rotate(-25) scale(.75)" color="#235142"/>
+      <use href="#leaf" transform="translate(66 26) rotate(-38) scale(.67)" color="#235142"/>
+    </g>
+  </defs>
+  <use href="#swastik" transform="translate(-13 56)"/>
+  <use href="#swastik" transform="translate(165 56)"/>
+  <use href="#branch"/>
+  <use href="#branch" transform="translate(152 0) scale(-1 1)"/>
+  <g stroke="#382b21" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M76 78V7" fill="none" stroke-width="1.7"/>
+    <path d="M76 7c-3 2-3 5 0 7 3-2 3-5 0-7zm0 9c-6-5-9-2-6 2l6 2 6-2c3-4 0-7-6-2zm0 7c-6-4-9-1-6 2l6 2 6-2c3-3 0-6-6-2z" fill="#ba6c51" stroke-width="1"/>
+    <path d="M48 73h56v7H48z" fill="#f1b834" stroke-width="1.7"/>
+    <path d="M53 80h46l-6 20H59z" fill="#a52620" stroke-width="1.7"/>
+    <path d="M51 100h50v6H51z" fill="#235142" stroke-width="1.7"/>
+    <path d="M45 106h62v3H45z" fill="#cf713c" stroke-width="1.5"/>
+    <path d="M56 84h40m-37 12h34m-31-6 5-4 5 4-5 4zm9 0 5-4 5 4-5 4zm9 0 5-4 5 4-5 4z" fill="none" stroke="#f2d39a" stroke-width="1.25"/>
+    <path d="M29 81l5-5 5 5-5 5zm84 0 5-5 5 5-5 5z" fill="#f1b834" stroke-width="1.1"/>
+    <circle cx="26" cy="90" r="1.6" fill="#a52620" stroke="none"/>
+    <circle cx="126" cy="90" r="1.6" fill="#a52620" stroke="none"/>
+  </g>
+</svg>

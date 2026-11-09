@@ -1,0 +1,162 @@
+.portrait-cover {
+ --portrait-edge: clamp(19px, 5.8vw, 105px);
+ position: relative;
+ isolation: isolate;
+ display: flex;
+ flex-direction: column;
+ min-height: 100vh;
+ min-height: 100svh;
+ padding: 0 var(--portrait-edge) clamp(20px, 3.8vw, 58px);
+ background: #24150f;
+ color: #fff8e9;
+}
+.portrait-cover-photo, .portrait-cover-wash {
+ position: absolute;
+ inset: 0;
+ width: 100%;
+ height: 100%;
+ z-index: -1;
+}
+.portrait-cover-photo {
+ display: block;
+ object-fit: cover;
+ object-position: 50% 46%;
+}
+.portrait-cover-wash {
+ background: linear-gradient(180deg, #160d09a8 0, transparent 24%, transparent 47%, #150c0852 68%, #130b08e3 100%),
+             linear-gradient(90deg, #1b0e0966, transparent 65%);
+}
+.portrait-cover-nav {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ min-height: 70px;
+ padding-block: 10px;
+ border-bottom: 1px solid #f7eed183;
+}
+.portrait-cover-nav p, .portrait-cover-names time, .portrait-cover-next {
+ font-size: clamp(10px, 1.22vw, 15px);
+ font-weight: 700;
+ letter-spacing: .15em;
+ text-transform: uppercase;
+}
+.portrait-cover-nav nav { display: flex; gap: clamp(12px, 2.6vw, 36px); }
+.portrait-cover-nav a {
+ display: inline-flex;
+ align-items: center;
+ gap: 7px;
+ min-height: 44px;
+ font-size: clamp(12px, 1.3vw, 18px);
+ text-decoration: none;
+ white-space: nowrap;
+}
+.portrait-cover-nav a:hover { text-decoration: underline; }
+.portrait-cover-names {
+ margin-top: auto;
+ padding-block: clamp(35px, 8vh, 88px) clamp(16px, 3.4vw, 42px);
+ text-shadow: 0 2px 18px #1f130d63;
+}
+.portrait-cover-names time { display: block; color: #ffdfb9; margin-bottom: .75em; }
+.portrait-cover h1 {
+ font: 500 clamp(50px, 10.2vw, 163px)/.94 var(--display);
+ letter-spacing: -.07em;
+}
+.portrait-cover h1 i { font-size: .76em; font-weight: 500; color: #f6cfb0; }
+.portrait-cover h1.portrait-regional-names {
+ font-family: Georgia, 'Noto Sans Meetei Mayek', serif;
+ font-size: clamp(38px, 8.3vw, 128px);
+ line-height: 1.25;
+ letter-spacing: 0;
+}
+.portrait-cover-next {
+ align-self: flex-start;
+ display: inline-flex;
+ align-items: center;
+ gap: 10px;
+ min-height: 44px;
+ text-decoration: none;
+}
+.portrait-cover-next span {
+ display: inline-grid;
+ place-items: center;
+ width: 26px;
+ height: 26px;
+ flex: 0 0 26px;
+ border: 1px solid #ffebd097;
+ border-radius: 50%;
+ font-size: 15px;
+ transition: transform .2s;
+}
+.portrait-cover-next:hover span { transform: translateY(3px); }
+
+.portrait-welcome {
+ display: grid;
+ justify-items: center;
+ gap: clamp(18px, 3vw, 36px);
+ padding: clamp(44px, 6.5vw, 84px) 7%;
+ text-align: center;
+ background: var(--cream);
+ border-bottom: 1px solid var(--red);
+}
+.portrait-welcome-copy .eyebrow {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ gap: 12px;
+}
+.portrait-welcome-copy .eyebrow::before, .portrait-welcome-copy .eyebrow::after {
+ content: "";
+ flex: 0 1 clamp(14px, 6vw, 65px);
+ height: 1px;
+ background: var(--red);
+ opacity: .45;
+}
+.portrait-welcome-copy h2 {
+ font: 500 clamp(44px, 6.1vw, 90px)/.99 var(--display);
+ letter-spacing: -.055em;
+ margin: 13px 0 10px;
+}
+.portrait-welcome-copy p:not(.eyebrow) { max-width: 42ch; margin-inline: auto; font-size: clamp(15px, 1.5vw, 20px); }
+.portrait-welcome-link {
+ display: inline-flex;
+ align-items: center;
+ gap: 11px;
+ min-height: 44px;
+ padding: 0 13px;
+ border-bottom: 1px solid currentColor;
+ font-size: 14px;
+ font-weight: 600;
+ text-decoration: none;
+}
+.portrait-welcome-link:hover { background: var(--paper); }
+.portrait-welcome-art {
+ width: min(100%, 580px);
+ padding: clamp(4px, 1vw, 9px);
+ border: 3px double var(--red);
+ background: var(--paper);
+}
+.portrait-welcome-art > img {
+ display: block;
+ width: 100%;
+ height: auto;
+}
+@media (max-width: 640px) {
+ .portrait-cover { padding-bottom: 24px; }
+ .portrait-cover-nav { min-height: 59px; }
+ .portrait-cover-nav p { font-size: 9px; letter-spacing: .11em; }
+ .portrait-cover-nav nav { gap: 10px; }
+ .portrait-cover-nav a { font-size: 11px; gap: 4px; }
+ .portrait-cover-photo { object-position: 51% 42%; }
+ .portrait-cover-wash {
+  background: linear-gradient(180deg, #140a06a6 0, transparent 20%, transparent 51%, #170d0873 73%, #130b08e8 100%);
+ }
+ .portrait-cover h1 { font-size: clamp(38px, 12vw, 76px); }
+ .portrait-cover-next { font-size: 10px; letter-spacing: .08em; }
+}
+@media (max-width: 420px) {
+ .portrait-cover { padding-bottom: 68px; }
+}
+@media (prefers-reduced-motion: reduce) {
+ .portrait-cover-next span { transition: none; }
+}

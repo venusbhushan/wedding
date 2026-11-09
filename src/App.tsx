@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { IiftRsvp } from './IiftRsvp';
+import './portrait-cover.css';
 import { GREETINGS } from '../lib/greeting.mjs';
 import { languageFromPreferences, languageUrl } from './language';
 import { invitationPhrases, weddingRibbon } from './invitationPhrases';
@@ -9,8 +10,8 @@ const LANGUAGE_NAMES: Record<string,string> = {en:'English',hi:'Hindi · हि�
 import type { ReactNode } from 'react';
 import { PLACES, RECEPTION } from './travel';
 import type { GuestSide } from './travel';
-import { ORIGINS, DIRECT, AIRPORTS, STATIONS, CHECKED, AIR_SOURCES, ARRIVAL_NAMES, flightSearch, railOptions } from './routes';
-import type { Origin, AirportDestination, RailDestination } from './routes';
+import { AIRPORT, AIR_SOURCE, DELHI_FLIGHT, MFP_ARRIVALS, NAVI_MUMBAI_FLIGHT, NONSTOP, ORIGINS, RAIL_BOOKING, RAIL_ENQUIRY, STATION, flightSearch } from './routes';
+import type { Origin } from './routes';
 
 function Band() { return <div className="folk-band" aria-hidden="true"/>; }
 function Arrow() { return <span aria-hidden="true">↗</span>; }
@@ -20,48 +21,94 @@ function Countdown({greeting}: {greeting: ReturnType<typeof useLocalInvitation>}
  useEffect(()=>{let id:number|undefined; const tick=()=>{clearInterval(id);setNow(Date.now());if(!document.hidden)id=window.setInterval(()=>setNow(Date.now()),1000);};tick();document.addEventListener('visibilitychange',tick);return()=>{clearInterval(id);document.removeEventListener('visibilitychange',tick);};},[]);
  const seconds=now===null?null:Math.max(0,Math.ceil((Date.parse('2026-11-30T00:00:00+05:30')-now)/1000));
  const units=seconds===null?[null,null,null,null]:[Math.floor(seconds/86400),Math.floor(seconds%86400/3600),Math.floor(seconds%3600/60),seconds%60];
- return <section className="countdown" aria-label="Wedding countdown"><div className="countdown-caption"><span lang={greeting.lang} dir={greeting.dir}>{invitationPhrases(greeting.lang).auspiciousTime}</span><h2>Almost<br/>{' '}<em>time.</em></h2></div><div><p className="eyebrow">THE COUNTDOWN TO 30 NOVEMBER</p><div className="timer" role="timer" aria-label="Time until the wedding" aria-live="off">{units.map((v,i)=><div key={i}><strong>{v===null?'—':String(v).padStart(2,'0')}</strong><span>{['Days','Hours','Minutes','Seconds'][i]}</span></div>)}</div><p className="timer-note">{seconds===0?(now!<Date.parse('2026-12-01T00:00:00+05:30')?'It’s wedding day!':'Our forever has begun.'):'30 November 2026 · Midnight IST'}</p></div><span className="countdown-end" aria-hidden="true">✳</span></section>;
+ return <section className="countdown" aria-label="Wedding countdown"><div className="countdown-caption"><span lang={greeting.lang} dir={greeting.dir}>{invitationPhrases(greeting.lang).auspiciousTime}</span><h2>Almost<br/>{' '}<em>time.</em></h2></div><div><p className="eyebrow">THE COUNTDOWN TO 30 NOVEMBER</p><div className="timer" role="timer" aria-label="Time until the wedding" aria-live="off">{units.map((v,i)=><div key={i}><strong>{v===null?'—':String(v).padStart(2,'0')}</strong><span>{['Days','Hours','Minutes','Seconds'][i]}</span></div>)}</div><p className="timer-note">{seconds===0?(now!<Date.parse('2026-12-01T00:00:00+05:30')?'It’s wedding day!':'Our forever has begun.'):'30 November 2026 · Midnight IST'}</p></div></section>;
 }
-function FlightCard({origin,to,onTrains}:{origin:Origin;to:AirportDestination;onTrains:()=>void}) {
- const local=origin.airportCode==='PAT';
- const airlines=DIRECT[to][origin.airportCode];
- const conflict=to==='DBR'&&origin.airportCode==='CCU';
- return <article className={`ticket flight-ticket ${to==='DBR'?'green-ticket':''}`}>
-  <div className="ticket-heading"><span className="eyebrow">{to==='PAT'?'01 · THE CAPITAL GATEWAY':'02 · THE MITHILA GATEWAY'}</span><span className="arrival-code" aria-hidden="true">{to}</span></div>
-  <h4>{AIRPORTS[to]} <span>Airport</span></h4>
-  <div className="route-line"><div><strong>{origin.airportCode}</strong><span>{origin.airport}</span></div><div className="route-middle"><span aria-hidden="true">— ✈ —</span><small>{local?'Already in Bihar':airlines?'Nonstop listed':'Via Delhi · DEL'}</small></div><div><strong>{to}</strong><span>{AIRPORTS[to]}</span></div></div>
-  <p className={`badge ${airlines?'direct':''}`}>{local?'Choose a local journey':airlines?'Published nonstop route':'Connection idea'}</p>
-  <p className="carrier">{local?'Your journey starts in Bihar.':airlines||'IndiGo on both flight legs'}</p>
-  <p className="ticket-note">{local?'Use the train guide below or arrange onward road travel to the celebrations.':airlines?'Choose your travel date to check flight numbers, fares and seats.':'Both legs are listed in published route networks. A same-day or through-ticket connection has not been verified; check dates and layovers.'}</p>
-  {conflict&&<p className="route-caveat">IndiGo also advertises Kolkata–Darbhanga direct, but the route directory differs. <OutLink href="https://www.goindigo.in/domestic-flights/kolkata-to-darbhanga-flights.html">Check with IndiGo</OutLink></p>}
-  <div className="ticket-bottom">{local?<button className="book-link local-train-button" onClick={onTrains}>Explore trains ↓</button>:<OutLink className="book-link" href={flightSearch(origin,to)}>Find flights</OutLink>}<details><summary>View route sources <span className="disclosure-mark" aria-hidden="true">+</span></summary><OutLink href={AIR_SOURCES[to]}>Published {to} routes</OutLink>{!airlines&&!local&&<OutLink href="https://www.flightconnections.com/flights-to-new-delhi-del">First leg to Delhi</OutLink>}<p>Researched {CHECKED}. General routes, not date-specific availability.</p></details></div>
+function FlightCard({origin}: {origin: Origin}) {
+ const airlines = NONSTOP[origin.airportCode];
+ const example = origin.airportCode === 'DEL' ? DELHI_FLIGHT : null;
+ const alternate = origin.id === 'mh' ? NAVI_MUMBAI_FLIGHT : null;
+ return <article className="ticket flight-ticket">
+  <div className="ticket-heading"><span className="eyebrow">THE MITHILA GATEWAY</span><span className="arrival-code" aria-hidden="true">{AIRPORT.code}</span></div>
+  <h4>{AIRPORT.city} <span>Airport</span></h4>
+  <div className="route-line">
+   <div><strong>{origin.airportCode}</strong><span>{origin.airport}</span></div>
+   <div className="route-middle"><span aria-hidden="true">— ✈ —</span><small>{airlines ? 'Nonstop listed' : 'Check connections'}</small></div>
+   <div><strong>{AIRPORT.code}</strong><span>{AIRPORT.city}</span></div>
+  </div>
+  <p className={airlines ? 'badge direct' : 'badge'}>{airlines ? 'Published nonstop routes' : 'No nonstop verified'}</p>
+  {airlines && <p className="carrier">{airlines}</p>}
+  {example && <p className="ticket-note">Published example: {example.airline} {example.number} · {example.time}</p>}
+  <p className="ticket-note">{airlines
+   ? 'Select your travel date to check scheduled departures, fares and seats.'
+   : 'Search for flights with a connection on your travel date. From nearby cities, rail may be simpler.'}</p>
+  <div className="ticket-bottom">
+   <OutLink className="book-link" href={flightSearch(origin)}>{airlines ? 'Find flights' : 'Search flights'}</OutLink>
+   <details><summary>View flight sources <span className="disclosure-mark" aria-hidden="true">+</span></summary>
+    <OutLink href={AIR_SOURCE}>Darbhanga route directory</OutLink>
+    {example && <OutLink href={example.source}>{example.number} timetable</OutLink>}
+   </details>
+  </div>
+  {alternate && <div className="train-service">
+   <p className="badge direct">Another nonstop from Navi Mumbai</p>
+   <p className="carrier">{alternate.airline} {alternate.number} · {alternate.airportCode} → {AIRPORT.code}</p>
+   <p className="ticket-note">Published example: {alternate.time}. Check the operating day before booking.</p>
+   <OutLink className="book-link" href={flightSearch(alternate)}>Find Navi Mumbai flights</OutLink>
+   {' · '}<OutLink href={alternate.source}>Timetable</OutLink>
+  </div>}
  </article>;
 }
-function TrainCard({origin,to}:{origin:Origin;to:RailDestination}) {
- const routes=railOptions(origin,to);
- return <article className="ticket train-ticket"><div className="ticket-heading"><span className="station-code">{to}</span><span className="eyebrow">{to==='MFP'?'FOR THE WEDDING':'FOR THE GROOM’S SIDE'}</span></div><h4>{STATIONS[to]}</h4>{routes.map(({train:t,arrival,transfer})=><div className="train-service" key={t.number}><p className={`badge ${!transfer&&!origin.connectionOnly?'direct':''}`}>{transfer?'Train + onward travel':origin.connectionOnly?'After a separate connection':'Through train from boarding station'}</p><p className="train-number">{t.number}</p><h5>{t.name}</h5><p className="boarding">{t.from} <b>{t.fromCode}</b><span aria-hidden="true"> → </span>{ARRIVAL_NAMES[arrival]} <b>{arrival}</b></p>{transfer&&<p className="transfer-note">Then arrange a separate local train or road transfer to <strong>{STATIONS[to]} ({to})</strong>.{arrival==='NBJU'&&' NBJU is New Barauni, not Barauni Junction (BJU).'}</p>}<OutLink className="book-link" href={t.source}>Timetable & operating days</OutLink></div>)}<p className="rail-footnote">Selected service, not a complete list. Confirm your boarding date and seat availability on <OutLink href="https://www.irctc.co.in/nget/train-search">IRCTC</OutLink>.</p></article>;
+
+function TrainCard({origin}: {origin: Origin}) {
+ return <article className="ticket train-ticket">
+  <div className="ticket-heading"><span className="station-code">{STATION.code}</span><span className="eyebrow">FOR THE WEDDING</span></div>
+  <h4>{STATION.name}</h4>
+  {origin.trains.map(train => <div className="train-service" key={train.number}>
+   <p className={origin.connectionOnly ? 'badge' : 'badge direct'}>{origin.connectionOnly ? 'After a separate connection' : 'Direct from the boarding station'}</p>
+   <p className="train-number">{train.number}</p>
+   <h5>{train.name}</h5>
+   <p className="boarding">{train.from} <b>{train.fromCode}</b><span aria-hidden="true"> → </span>{STATION.name} <b>{STATION.code}</b></p>
+   {MFP_ARRIVALS[train.number] && <p className="ticket-note">
+    Published times · {train.departure && `Depart ${train.departure} · `}Arrive {MFP_ARRIVALS[train.number]} IST
+   </p>}
+   <OutLink className="book-link" href={train.source}>Timetable &amp; operating days</OutLink>
+  </div>)}
+  {origin.trains.length === 0 && <p className="ticket-note">No direct train to {STATION.name} was verified for this origin. Search using {STATION.code} as your destination.</p>}
+  <p className="rail-footnote">Check your boarding date and seat availability on <OutLink href={RAIL_BOOKING}>IRCTC</OutLink>. Confirm your train’s running status on <OutLink href={RAIL_ENQUIRY}>NTES</OutLink>.</p>
+ </article>;
 }
+
 function TravelGuide({automaticOrigin}: {automaticOrigin:string|null}) {
  const [chosenOrigin,setChosenOrigin]=useState<string|null>(null);
  const originId=chosenOrigin || automaticOrigin || 'delhi';
  const [mode,setMode]=useState<'flights'|'trains'>('flights');
  const origin=ORIGINS.find(o=>o.id===originId)!;
  return <section className="travel-section" id="travel" aria-labelledby="travel-title"><div className="travel-intro"><div><p className="eyebrow">02 / THE JOURNEY</p><h2 id="travel-title">All roads<br/><em>lead to Bihar.</em></h2></div><div className="journey-painting" aria-hidden="true"><div className="journey-art"/><span className="journey-seal">Bihar<br/><small>AWAITS YOU</small></span></div></div>
-  <div className="travel-book" id="route-planner"><div className="travel-book-top"><span>YOUR PASSAGE TO THE CELEBRATION</span><span>INDIA → BIHAR</span></div>
+  <div className="travel-book" id="route-planner"><div className="travel-book-top"><span>YOUR PASSAGE TO THE CELEBRATION</span><span>DBR BY AIR · MFP BY RAIL</span></div>
    <div className="travel-controls"><div className="origin-field"><label htmlFor="origin">Where are you coming from?</label><div className="select-wrap"><select id="origin" value={originId} onChange={e=>setChosenOrigin(e.target.value)}>{ORIGINS.map(o=><option key={o.id} value={o.id}>{o.capital} · {o.state}</option>)}</select><span className="select-chevron" aria-hidden="true">⌄</span></div><p>{!chosenOrigin && automaticOrigin?'Capital selected from your approximate location · Change it anytime.':'Choose a city or state · 28 states + Delhi · capital cities and their gateways'}</p></div><fieldset className="transport-toggle"><legend>Choose your journey</legend><label className={mode==='flights'?'active':''}><input type="radio" name="transport" checked={mode==='flights'} onChange={()=>setMode('flights')}/><span className="mode-number" aria-hidden="true">01</span><span className="mode-name">By air</span></label><label className={mode==='trains'?'active':''}><input type="radio" name="transport" checked={mode==='trains'} onChange={()=>setMode('trains')}/><span className="mode-number" aria-hidden="true">02</span><span className="mode-name">By rail</span></label></fieldset></div>
-   <div className="results-heading"><div><p className="eyebrow">YOUR STARTING POINT</p><h3>{origin.capital} <span>to Bihar</span></h3></div><span className="researched">Researched {CHECKED}</span></div>
+   <div className="results-heading"><div><p className="eyebrow">YOUR STARTING POINT</p><h3>{origin.capital} <span>to {mode==='flights'?AIRPORT.city:'Muzaffarpur'}</span></h3></div><span className="researched">Published schedules · Check your date</span></div>
    <div className="route-results" aria-live="polite" aria-atomic="false">
-   {mode==='flights'?<><p className="gateway-note">{origin.airportNote||`Depart from ${origin.airport} (${origin.airportCode}).`} {origin.gatewaySource&&<OutLink href={origin.gatewaySource}>Gateway details</OutLink>}</p><div className="flights-grid">{(['PAT','DBR'] as const).map(to=><FlightCard key={`${origin.id}-${to}`} origin={origin} to={to} onTrains={()=>setMode('trains')}/>)}</div><p className="guide-note">After landing, arrange onward travel to Muzaffarpur for the wedding or Begusarai for the groom’s celebrations.</p><button className="switch-link" onClick={()=>setMode('trains')}>Prefer a train? Explore the three arrival stations →</button></>:<div id="train-guide"><p className="gateway-note">{origin.railNote||'Board at the station printed on your chosen service below.'} {origin.gatewaySource&&<OutLink href={origin.gatewaySource}>Connection source</OutLink>}</p><div className="trains-grid">{(['BGS','BJU','MFP'] as const).map(to=><TrainCard key={`${origin.id}-${to}`} origin={origin} to={to}/>)}</div><p className="guide-note">Weekly services need careful planning. Allow for overnight journeys, separate connections and onward travel to the venue. No seats or November departures are confirmed here.</p></div>}
-   </div><div className="travel-book-bottom"><span className="guide-lotus" aria-hidden="true"/><p>Route guide · Check current schedules before booking.</p><span className="guide-lotus" aria-hidden="true"/></div>
+   {mode==='flights' ? <>
+    <p className="gateway-note">{origin.airportNote || `Search from ${origin.airport} (${origin.airportCode}).`}</p>
+    <div className="flights-grid"><FlightCard key={origin.id} origin={origin}/></div>
+    <p className="guide-note">From Darbhanga Airport, allow time for onward road travel to the wedding venue in Muzaffarpur.</p>
+   </> : <div id="train-guide">
+    {origin.railNote && <p className="gateway-note">{origin.railNote} {origin.gatewaySource && <OutLink href={origin.gatewaySource}>Connection source</OutLink>}</p>}
+    <div className="trains-grid"><TrainCard key={origin.id} origin={origin}/></div>
+    <p className="guide-note">Check the arrival date as well as the time. Some journeys arrive one or more days after boarding.</p>
+   </div>}
+   </div>
   </div>
+  <footer className="mithila-journey-footer" aria-hidden="true">
+   <img src="/mithila-journey-footer.svg" width="232" height="112" alt="" loading="lazy"/>
+  </footer>
  </section>;
 }
 function Celebration({greeting}: {greeting: ReturnType<typeof useLocalInvitation>}) {
- const [side,setSide]=useState<GuestSide>('groom');
+ const [side,setSide]=useState<GuestSide>('bride');
  const steps=side==='groom'?[
  ['28 NOVEMBER','Mehendi','Begusarai'],['30 NOVEMBER','Vivaah','Ratna Banquet & Resort, Muzaffarpur'],['2 DECEMBER','Reception','The groom’s residence, Begusarai']
  ]:[['30 NOVEMBER','A warm welcome','Join Payal’s family in Muzaffarpur'],['30 NOVEMBER','Payal weds Venus','Ratna Banquet & Resort'],['1 DECEMBER','A new beginning','The couple returns to Begusarai'],['RECEPTION','Celebrate once more',`Begusarai · ${RECEPTION.date}`]];
- return <section className={`celebration-section ${side}`} id="celebrations"><div className="celebration-intro"><p className="eyebrow">01 / THE CELEBRATIONS</p><h2>Two homes.<br/><em>One wedding.</em></h2><fieldset className="side-selector"><legend className="sr-only">Your side of the celebration</legend>{(['bride','groom'] as const).map(s=><label key={s} className={side===s?'selected':''}><input type="radio" name="side" checked={side===s} onChange={()=>setSide(s)}/><strong className="side-name">{s==='groom'?'Venus':'Payal'}</strong><span>{s==='groom'?'Groom’s side':'Bride’s side'}</span><small>{s==='groom'?'Begusarai':'Muzaffarpur'}</small></label>)}</fieldset><div className="portrait-pair"><button type="button" className="portrait bride-portrait" aria-label="Choose Payal’s side — bride, Muzaffarpur" aria-pressed={side==='bride'} aria-controls="celebration-programme" onClick={()=>setSide('bride')}/><span lang={greeting.lang} dir={greeting.dir} aria-hidden="true">{invitationPhrases(greeting.lang).together}</span><button type="button" className="portrait groom-portrait" aria-label="Choose Venus’s side — groom, Begusarai" aria-pressed={side==='groom'} aria-controls="celebration-programme" onClick={()=>setSide('groom')}/></div><p className="programme-caption">From the baraat to the homecoming.</p></div><ol className="celebration-grid" id="celebration-programme" aria-live="polite">{steps.map(([date,title,where],i)=><li key={`${side}-${i}`} className={title==='Vivaah'||title==='Payal weds Venus'?'wedding-event':undefined}><span className="step-number" aria-hidden="true">0{i+1}</span><div><p className="eyebrow">{date}</p><h3 lang={title==='Vivaah'?greeting.lang:undefined} dir={title==='Vivaah'?greeting.dir:undefined}>{title==='Vivaah'?invitationPhrases(greeting.lang).wedding:title}</h3><p>{where}</p></div><span className="step-flower" aria-hidden="true">{['✳','❋','✴','✳'][i]}</span></li>)}</ol></section>;
+ return <section className={`celebration-section ${side}`} id="celebrations"><div className="celebration-intro"><p className="eyebrow">01 / THE CELEBRATIONS</p><h2>Two homes.<br/><em>One wedding.</em></h2><fieldset className="side-selector"><legend className="sr-only">Your side of the celebration</legend>{(['bride','groom'] as const).map(s=><label key={s} className={side===s?'selected':''}><input type="radio" name="side" checked={side===s} onChange={()=>setSide(s)}/><strong className="side-name">{s==='groom'?'Venus':'Payal'}</strong><span>{s==='groom'?'Groom’s side':'Bride’s side'}</span><small>{s==='groom'?'Begusarai':'Muzaffarpur'}</small></label>)}</fieldset><div className="portrait-pair"><button type="button" className="portrait bride-portrait" aria-label="Choose Payal’s side — bride, Muzaffarpur" aria-pressed={side==='bride'} aria-controls="celebration-programme" onClick={()=>setSide('bride')}/><span lang={greeting.lang} dir={greeting.dir} aria-hidden="true">{invitationPhrases(greeting.lang).together}</span><button type="button" className="portrait groom-portrait" aria-label="Choose Venus’s side — groom, Begusarai" aria-pressed={side==='groom'} aria-controls="celebration-programme" onClick={()=>setSide('groom')}/></div><p className="programme-caption">From the baraat to the homecoming.</p></div><ol className="celebration-grid" id="celebration-programme" aria-live="polite">{steps.map(([date,title,where],i)=><li key={`${side}-${i}`} className={title==='Vivaah'||title==='Payal weds Venus'?'wedding-event':undefined}><span className="step-number" aria-hidden="true">0{i+1}</span><div><p className="eyebrow">{date}</p><h3 lang={title==='Vivaah'?greeting.lang:undefined} dir={title==='Vivaah'?greeting.dir:undefined}>{title==='Vivaah'?invitationPhrases(greeting.lang).wedding:title}</h3><p>{where}</p></div></li>)}</ol></section>;
 
 }
 function useLocalInvitation() {
@@ -79,9 +126,65 @@ function useLocalInvitation() {
  return greeting;
 }
 function Hero({greeting}: {greeting: ReturnType<typeof useLocalInvitation>}) {
- return <section className="invitation-hero" aria-labelledby="couple-names"><div className="hero-copy"><div className="hero-kicker"><span className="local-greeting" lang={greeting.lang} dir={greeting.dir}>{greeting.text}</span><span>BIHAR, INDIA · 2026</span></div><h1 id="couple-names" className={/[^\u0000-\u007f]/.test(greeting.groom)?"regional-names":undefined} lang={greeting.lang}><span dir={greeting.dir}>{greeting.bride}</span><i aria-hidden="true">&</i><span dir={greeting.dir}>{greeting.groom}</span></h1><div className="hero-bottom"><p>With our families,<br/>we invite you to celebrate.</p><a className="hero-cta" href="#celebrations">You’re invited <span aria-hidden="true">↘</span></a></div></div><figure className="hero-painting"><img src="/mithila-celebration-1536.webp" srcSet="/mithila-celebration-640.webp 640w, /mithila-celebration-960.webp 960w, /mithila-celebration-1536.webp 1536w" sizes="(max-width:760px) 100vw, 52vw" width="1536" height="1024" alt="Intricate Madhubani peacocks, fish and lotus flowers painted in indigo, pink and marigold" fetchPriority="high"/><figcaption>MITHILA IN EVERY DETAIL. LOVE IN EVERY LINE.</figcaption><div className="date-seal"><span>MONDAY</span><strong>30</strong><span>NOVEMBER 2026</span></div></figure><div className="hero-side-note">MUZAFFARPUR / BEGUSARAI</div></section>;
+ return <section className="portrait-cover" aria-labelledby="couple-names">
+  <img className="portrait-cover-photo" src="/wedding-portrait.jpg" srcSet="/wedding-portrait-small.jpg 900w, /wedding-portrait.jpg 1800w"
+   sizes="(max-width:640px) 150vw, 100vw" width="1800" height="1200" alt="Payal and Venus together in warm evening light" fetchPriority="high"/>
+  <div className="portrait-cover-wash" aria-hidden="true"/>
+  <header className="portrait-cover-nav">
+   <p>A wedding in Bihar</p>
+   <nav aria-label="Main navigation">
+    <a href="#celebrations">The details <span aria-hidden="true">↘</span></a>
+    <a href="#travel">Getting here <Arrow/></a>
+   </nav>
+  </header>
+  <div className="portrait-cover-names">
+   <time dateTime="2026-11-30">30 November 2026</time>
+   <h1 id="couple-names" lang={greeting.lang} className={greeting.bride === 'Payal' && greeting.groom === 'Venus' ? undefined : 'portrait-regional-names'}>
+    <bdi dir={greeting.dir}>{greeting.bride}</bdi>{' '}<i lang="en">&amp;</i>{' '}<bdi dir={greeting.dir}>{greeting.groom}</bdi>
+   </h1>
+  </div>
+  <a className="portrait-cover-next" href="#invitation"><span aria-hidden="true">↓</span> Read the invitation</a>
+ </section>;
 }
-function Ribbon({greeting}: {greeting: ReturnType<typeof useLocalInvitation>}){const blessing=weddingRibbon(greeting.lang);return <div className="wedding-ribbon" aria-label="Payal and Venus, 30 November 2026"><div aria-hidden="true">{Array.from({length:4},(_,i)=><span key={i}>PAYAL & VENUS <b>✳</b> 30 NOVEMBER 2026 <b>✳</b> <em className="ribbon-greeting" lang={blessing.lang} dir={blessing.dir}>{blessing.text}</em> <b>✳</b></span>)}</div></div>}
+function InvitationNote({greeting}: {greeting: ReturnType<typeof useLocalInvitation>}) {
+ return <section className="portrait-welcome" id="invitation" aria-labelledby="invitation-title">
+  <div className="portrait-welcome-copy">
+   <p className="eyebrow" lang={greeting.lang} dir={greeting.dir}>{greeting.text}</p>
+   <h2 id="invitation-title">You’re <em>invited.</em></h2>
+   <p>With our families, we invite you to celebrate our wedding in Bihar.</p>
+  </div>
+  <figure className="portrait-welcome-art">
+   <img src="/mithila-celebration-960.webp" srcSet="/mithila-celebration-640.webp 640w, /mithila-celebration-960.webp 960w"
+    sizes="(max-width:680px) 86vw, 580px" width="960" height="640" alt="Madhubani peacocks, fish and lotus flowers" loading="lazy"/>
+  </figure>
+  <a className="portrait-welcome-link" href="#celebrations">The celebrations <span aria-hidden="true">↓</span></a>
+ </section>;
+}
+function Ribbon({greeting}: {greeting: ReturnType<typeof useLocalInvitation>}) {
+ const [paused,setPaused] = useState(false);
+ const blessing = weddingRibbon(greeting.lang);
+ const inscription = <>
+  <span className="ribbon-names">Payal &amp; Venus</span>
+  <b className="ribbon-flower" aria-hidden="true">✳</b>
+  <time className="ribbon-date" dateTime="2026-11-30">30 November 2026</time>
+  <b className="ribbon-flower" aria-hidden="true">✳</b>
+  <span className="ribbon-blessing" lang={blessing.lang} dir={blessing.dir}>{blessing.text}</span>
+  <b className="ribbon-flower" aria-hidden="true">✳</b>
+ </>;
+ return <div className="wedding-ribbon" data-paused={paused}>
+  <div className="ribbon-static sr-only">{inscription}</div>
+  <div className="ribbon-window" aria-hidden="true">
+   <div className="ribbon-track">
+    {[0,1].map(run=><div className="ribbon-run" key={run}>
+     {[0,1,2,3].map(index=><div className="ribbon-inscription" key={index}>{inscription}</div>)}
+    </div>)}
+   </div>
+  </div>
+  <button type="button" className="ribbon-toggle" aria-label={paused?'Resume scrolling invitation text':'Pause scrolling invitation text'} onClick={()=>setPaused(value=>!value)}>
+   <span className={paused?'ribbon-play-mark':'ribbon-pause-mark'} aria-hidden="true"/>
+  </button>
+ </div>;
+}
 export default function App() {
  const automaticGreeting=useLocalInvitation();
  function readLanguage(){
@@ -98,5 +201,5 @@ export default function App() {
  const greeting=language==='auto'?automaticGreeting:{...GREETINGS[language],originId:automaticGreeting.originId,dir:GREETINGS[language].dir || 'ltr'};
  function changeLanguage(value:string){setLanguage(value);window.history.replaceState(window.history.state,'',languageUrl(window.location.href,value));try {if(value==='auto') localStorage.removeItem('wedding-language');else localStorage.setItem('wedding-language',value);} catch {/* Selection still works without storage. */}}
 
- return <div className="page-frame"><a className="skip-link" href="#travel">Skip to travel guide</a><Band/><header className="site-nav"><a className="wordmark" href="#home">P<span>❋</span>V</a><span className="nav-caption">THE WEDDING OF<br/>PAYAL & VENUS</span><nav aria-label="Main navigation"><a href="#celebrations">The celebrations</a><a className="nav-travel" href="#travel">Getting here <span aria-hidden="true">↗</span></a></nav></header><main id="home"><Hero greeting={greeting}/><Ribbon greeting={greeting}/><Countdown greeting={greeting}/><Celebration greeting={greeting}/><TravelGuide automaticOrigin={automaticGreeting.originId}/><section className="venues-section" aria-labelledby="venues-title"><div className="venue-intro"><p className="eyebrow">03 / MEET US HERE</p><h2 id="venues-title">A place<br/><em>for you.</em></h2><span lang="hi">अतिथि देवो भवः</span></div><div className="venue-grid">{(['wedding','begusarai'] as const).map((k,i)=><article key={k}><p className="eyebrow">{k==='wedding'?'30 NOVEMBER · THE WEDDING':'BARAAT & RECEPTION'}</p><span className="venue-number" aria-hidden="true">0{i+1}</span><h3>{PLACES[k].title}</h3><p className="venue-city">{PLACES[k].city}</p><address>{PLACES[k].address}</address>{k==='begusarai'&&<p className="venue-detail">Baraat: 30 November, noon<br/>Reception: {RECEPTION.date}</p>}</article>)}</div></section></main><footer><Band/><div className="footer-art"><p className="footer-invitation" lang={greeting.lang} dir={greeting.dir}>{greeting.invitation}</p><p>A little Bihar.<br/><em>A lot of love.</em></p><a href="#home">Payal & Venus <span aria-hidden="true">↑</span></a><span>30 NOVEMBER 2026 · WITH OUR FAMILIES</span></div><div className="language-settings"><label htmlFor="display-language">Invitation language</label><div className="language-select-wrap"><select id="display-language" value={language} onChange={event=>changeLanguage(event.target.value)} aria-describedby="language-help"><option value="auto">Automatic · use my location</option>{Object.entries(LANGUAGE_NAMES).map(([code,name])=><option key={code} value={code}>{name}</option>)}</select><span aria-hidden="true">⌄</span></div><p id="language-help">Changes the greeting, couple’s names, countdown caption, portrait caption, wedding event, scrolling blessing and invitation above. Copy this page’s URL to share your chosen language.</p><p className="language-status" role="status">{language==='auto'?`Automatic · ${LANGUAGE_NAMES[Object.keys(GREETINGS).find(key=>GREETINGS[key].lang===greeting.lang) || 'en']}`:`Selected · ${LANGUAGE_NAMES[language]}`}</p></div><Band/></footer><IiftRsvp /><Analytics /><SpeedInsights /></div>;
+ return <div className="page-frame"><a className="skip-link" href="#travel">Skip to travel guide</a><main id="home"><Hero greeting={greeting}/><Ribbon greeting={greeting}/><InvitationNote greeting={greeting}/><Countdown greeting={greeting}/><Celebration greeting={greeting}/><TravelGuide automaticOrigin={automaticGreeting.originId}/><section className="venues-section" aria-labelledby="venues-title"><div className="venue-intro"><p className="eyebrow">03 / MEET US HERE</p><h2 id="venues-title">A place<br/><em>for you.</em></h2><span lang="hi">अतिथि देवो भवः</span></div><div className="venue-grid">{(['wedding','begusarai'] as const).map((k,i)=><article key={k}><p className="eyebrow">{k==='wedding'?'30 NOVEMBER · THE WEDDING':'BARAAT & RECEPTION'}</p><span className="venue-number" aria-hidden="true">0{i+1}</span><h3>{PLACES[k].title}</h3><p className="venue-city">{PLACES[k].city}</p><address>{PLACES[k].address}</address>{k==='begusarai'&&<p className="venue-detail">Baraat: 30 November, noon<br/>Reception: {RECEPTION.date}</p>}</article>)}</div></section></main><footer><Band/><div className="footer-art"><p className="footer-invitation" lang={greeting.lang} dir={greeting.dir}>{greeting.invitation}</p><p>A little Bihar.<br/><em>A lot of love.</em></p><a href="#home">Payal & Venus <span aria-hidden="true">↑</span></a><span>30 NOVEMBER 2026 · WITH OUR FAMILIES</span></div><div className="language-settings"><label htmlFor="display-language">Invitation language</label><div className="language-select-wrap"><select id="display-language" value={language} onChange={event=>changeLanguage(event.target.value)} aria-describedby="language-help"><option value="auto">Automatic · use my location</option>{Object.entries(LANGUAGE_NAMES).map(([code,name])=><option key={code} value={code}>{name}</option>)}</select><span aria-hidden="true">⌄</span></div><p id="language-help">Changes the greeting, couple’s names, countdown caption, portrait caption, wedding event, scrolling blessing and invitation above. Copy this page’s URL to share your chosen language.</p><p className="language-status" role="status">{language==='auto'?`Automatic · ${LANGUAGE_NAMES[Object.keys(GREETINGS).find(key=>GREETINGS[key].lang===greeting.lang) || 'en']}`:`Selected · ${LANGUAGE_NAMES[language]}`}</p></div><Band/></footer><IiftRsvp /><Analytics /><SpeedInsights /></div>;
 }

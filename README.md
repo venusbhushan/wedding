@@ -4,7 +4,7 @@ A responsive React + TypeScript wedding website for **30 November 2026**, with a
 
 ## Travel guide
 
-Choose from all 28 Indian states plus Delhi. Flight cards cover Patna (PAT) and Darbhanga (DBR); rail cards cover Begusarai (BGS), Barauni Junction (BJU), and Muzaffarpur Junction (MFP). Nearby gateways, connection ideas and onward transfers are explicitly identified. No maps are embedded or linked.
+Choose from all 28 Indian states plus Delhi. The only flight arrival is Darbhanga (DBR) and the only rail arrival is Muzaffarpur Junction (MFP). Timetable links show published services. Use Google Flights or IRCTC for travel-date availability. Gateway stations and independently arranged first legs are labelled. No maps are embedded or linked.
 
 The guide is a sourced snapshot researched on 1 October 2026, **not live seat availability**. It shows selected services rather than every train or flight. Fares, operating dates, flight numbers and departure times must be checked with the linked booking or schedule providers. See [RESEARCH.md](RESEARCH.md) for sources, discrepancies and maintenance notes.
 
