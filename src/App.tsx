@@ -9,7 +9,6 @@ import { invitationPhrases, weddingRibbon } from './invitationPhrases';
 const LANGUAGE_NAMES: Record<string,string> = {en:'English',hi:'Hindi · हिन्दी',bn:'Bengali · বাংলা',as:'Assamese · অসমীয়া',gu:'Gujarati · ગુજરાતી',mr:'Marathi · मराठी',kok:'Konkani · कोंकणी',kn:'Kannada · ಕನ್ನಡ',ml:'Malayalam · മലയാളം',ta:'Tamil · தமிழ்',te:'Telugu · తెలుగు',or:'Odia · ଓଡ଼ିଆ',pa:'Punjabi · ਪੰਜਾਬੀ',ne:'Nepali · नेपाली',mni:'Manipuri · ꯃꯤꯇꯩꯂꯣꯟ',lus:'Mizo',ur:'Urdu · اردو',es:'Spanish · Español',tr:'Turkish · Türkçe',el:'Greek · Ελληνικά'};
 import type { ReactNode } from 'react';
 import { PLACES, RECEPTION } from './travel';
-import type { GuestSide } from './travel';
 import { AIRPORT, AIR_SOURCE, DELHI_FLIGHT, MFP_ARRIVALS, NAVI_MUMBAI_FLIGHT, NONSTOP, ORIGINS, RAIL_BOOKING, RAIL_ENQUIRY, STATION, flightSearch } from './routes';
 import type { Origin } from './routes';
 
@@ -104,12 +103,41 @@ function TravelGuide({automaticOrigin}: {automaticOrigin:string|null}) {
  </section>;
 }
 function Celebration({greeting}: {greeting: ReturnType<typeof useLocalInvitation>}) {
- const [side,setSide]=useState<GuestSide>('bride');
- const steps=side==='groom'?[
- ['28 NOVEMBER','Mehendi','Begusarai'],['30 NOVEMBER','Vivaah','Ratna Banquet & Resort, Muzaffarpur'],['2 DECEMBER','Reception','The groom’s residence, Begusarai']
- ]:[['30 NOVEMBER','A warm welcome','Join Payal’s family in Muzaffarpur'],['30 NOVEMBER','Payal weds Venus','Ratna Banquet & Resort'],['1 DECEMBER','A new beginning','The couple returns to Begusarai'],['RECEPTION','Celebrate once more',`Begusarai · ${RECEPTION.date}`]];
- return <section className={`celebration-section ${side}`} id="celebrations"><div className="celebration-intro"><p className="eyebrow">01 / THE CELEBRATIONS</p><h2>Two homes.<br/><em>One wedding.</em></h2><fieldset className="side-selector"><legend className="sr-only">Your side of the celebration</legend>{(['bride','groom'] as const).map(s=><label key={s} className={side===s?'selected':''}><input type="radio" name="side" checked={side===s} onChange={()=>setSide(s)}/><strong className="side-name">{s==='groom'?'Venus':'Payal'}</strong><span>{s==='groom'?'Groom’s side':'Bride’s side'}</span><small>{s==='groom'?'Begusarai':'Muzaffarpur'}</small></label>)}</fieldset><div className="portrait-pair"><button type="button" className="portrait bride-portrait" aria-label="Choose Payal’s side — bride, Muzaffarpur" aria-pressed={side==='bride'} aria-controls="celebration-programme" onClick={()=>setSide('bride')}/><span lang={greeting.lang} dir={greeting.dir} aria-hidden="true">{invitationPhrases(greeting.lang).together}</span><button type="button" className="portrait groom-portrait" aria-label="Choose Venus’s side — groom, Begusarai" aria-pressed={side==='groom'} aria-controls="celebration-programme" onClick={()=>setSide('groom')}/></div><p className="programme-caption">From the baraat to the homecoming.</p></div><ol className="celebration-grid" id="celebration-programme" aria-live="polite">{steps.map(([date,title,where],i)=><li key={`${side}-${i}`} className={title==='Vivaah'||title==='Payal weds Venus'?'wedding-event':undefined}><span className="step-number" aria-hidden="true">0{i+1}</span><div><p className="eyebrow">{date}</p><h3 lang={title==='Vivaah'?greeting.lang:undefined} dir={title==='Vivaah'?greeting.dir:undefined}>{title==='Vivaah'?invitationPhrases(greeting.lang).wedding:title}</h3><p>{where}</p></div></li>)}</ol></section>;
-
+ const venue = PLACES.wedding;
+ const mapQuery = new URLSearchParams({api: '1', query: `${venue.title}, ${venue.address}`});
+ return <section className="celebration-section" id="celebrations" aria-labelledby="celebration-title">
+  <header className="celebration-intro">
+   <p className="eyebrow">01 / THE CELEBRATIONS</p>
+   <h2 id="celebration-title"><span>Two homes.</span>{' '}<em>One wedding.</em></h2>
+  </header>
+  <figure className="celebration-art">
+   <div className="celebration-portraits">
+    <div className="portrait bride-portrait" role="img" aria-label="Madhubani illustration of Payal"/>
+    <div className="portrait groom-portrait" role="img" aria-label="Madhubani illustration of Venus"/>
+   </div>
+   <figcaption className="portrait-caption">
+    <svg viewBox="-18 -18 36 36" width="52" height="52" aria-hidden="true" focusable="false">
+     <path d="M-13 0h26M0-13v26M0-13h13M13 0v13M0 13h-13M-13 0v-13"
+      fill="none" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round"/>
+     <g fill="currentColor">
+      <circle cx="-7" cy="-7" r="1.9"/>
+      <circle cx="7" cy="-7" r="1.9"/>
+      <circle cx="-7" cy="7" r="1.9"/>
+      <circle cx="7" cy="7" r="1.9"/>
+     </g>
+    </svg>
+    <span lang={greeting.lang} dir={greeting.dir}>{invitationPhrases(greeting.lang).together}</span>
+   </figcaption>
+  </figure>
+  <div className="celebration-details">
+   <time dateTime="2026-11-30">30 November 2026</time>
+   <h3>
+    <OutLink className="celebration-map" href={`https://www.google.com/maps/search/?${mapQuery}`}>
+     {venue.title}, {venue.city}{' '}
+    </OutLink>
+   </h3>
+  </div>
+ </section>;
 }
 function useLocalInvitation() {
  const [greeting,setGreeting]=useState({lang:'en',text:'Wedding celebration',dir:'ltr',groom:'Venus',bride:'Payal',invitation:'With love, you’re invited',originId:null as string|null});
@@ -201,5 +229,5 @@ export default function App() {
  const greeting=language==='auto'?automaticGreeting:{...GREETINGS[language],originId:automaticGreeting.originId,dir:GREETINGS[language].dir || 'ltr'};
  function changeLanguage(value:string){setLanguage(value);window.history.replaceState(window.history.state,'',languageUrl(window.location.href,value));try {if(value==='auto') localStorage.removeItem('wedding-language');else localStorage.setItem('wedding-language',value);} catch {/* Selection still works without storage. */}}
 
- return <div className="page-frame"><a className="skip-link" href="#travel">Skip to travel guide</a><main id="home"><Hero greeting={greeting}/><Ribbon greeting={greeting}/><InvitationNote greeting={greeting}/><Countdown greeting={greeting}/><Celebration greeting={greeting}/><TravelGuide automaticOrigin={automaticGreeting.originId}/><section className="venues-section" aria-labelledby="venues-title"><div className="venue-intro"><p className="eyebrow">03 / MEET US HERE</p><h2 id="venues-title">A place<br/><em>for you.</em></h2><span lang="hi">अतिथि देवो भवः</span></div><div className="venue-grid">{(['wedding','begusarai'] as const).map((k,i)=><article key={k}><p className="eyebrow">{k==='wedding'?'30 NOVEMBER · THE WEDDING':'BARAAT & RECEPTION'}</p><span className="venue-number" aria-hidden="true">0{i+1}</span><h3>{PLACES[k].title}</h3><p className="venue-city">{PLACES[k].city}</p><address>{PLACES[k].address}</address>{k==='begusarai'&&<p className="venue-detail">Baraat: 30 November, noon<br/>Reception: {RECEPTION.date}</p>}</article>)}</div></section></main><footer><Band/><div className="footer-art"><p className="footer-invitation" lang={greeting.lang} dir={greeting.dir}>{greeting.invitation}</p><p>A little Bihar.<br/><em>A lot of love.</em></p><a href="#home">Payal & Venus <span aria-hidden="true">↑</span></a><span>30 NOVEMBER 2026 · WITH OUR FAMILIES</span></div><div className="language-settings"><label htmlFor="display-language">Invitation language</label><div className="language-select-wrap"><select id="display-language" value={language} onChange={event=>changeLanguage(event.target.value)} aria-describedby="language-help"><option value="auto">Automatic · use my location</option>{Object.entries(LANGUAGE_NAMES).map(([code,name])=><option key={code} value={code}>{name}</option>)}</select><span aria-hidden="true">⌄</span></div><p id="language-help">Changes the greeting, couple’s names, countdown caption, portrait caption, wedding event, scrolling blessing and invitation above. Copy this page’s URL to share your chosen language.</p><p className="language-status" role="status">{language==='auto'?`Automatic · ${LANGUAGE_NAMES[Object.keys(GREETINGS).find(key=>GREETINGS[key].lang===greeting.lang) || 'en']}`:`Selected · ${LANGUAGE_NAMES[language]}`}</p></div><Band/></footer><IiftRsvp /><Analytics /><SpeedInsights /></div>;
+ return <div className="page-frame"><a className="skip-link" href="#travel">Skip to travel guide</a><main id="home"><Hero greeting={greeting}/><Ribbon greeting={greeting}/><InvitationNote greeting={greeting}/><Countdown greeting={greeting}/><Celebration greeting={greeting}/><TravelGuide automaticOrigin={automaticGreeting.originId}/><section className="venues-section" aria-labelledby="venues-title"><div className="venue-intro"><p className="eyebrow">03 / MEET US HERE</p><h2 id="venues-title">A place<br/><em>for you.</em></h2><span lang="hi">अतिथि देवो भवः</span></div><div className="venue-grid">{(['wedding','begusarai'] as const).map((k,i)=><article key={k}><p className="eyebrow">{k==='wedding'?'30 NOVEMBER · THE WEDDING':'BARAAT & RECEPTION'}</p><span className="venue-number" aria-hidden="true">0{i+1}</span><h3>{PLACES[k].title}</h3><p className="venue-city">{PLACES[k].city}</p><address>{PLACES[k].address}</address>{k==='begusarai'&&<p className="venue-detail">Baraat: 30 November, noon<br/>Reception: {RECEPTION.date}</p>}</article>)}</div></section></main><footer><Band/><div className="footer-art"><p className="footer-invitation" lang={greeting.lang} dir={greeting.dir}>{greeting.invitation}</p><p>A little Bihar.<br/><em>A lot of love.</em></p><a href="#home">Payal & Venus <span aria-hidden="true">↑</span></a><span>30 NOVEMBER 2026 · WITH OUR FAMILIES</span></div><div className="language-settings"><label htmlFor="display-language">Invitation language</label><div className="language-select-wrap"><select id="display-language" value={language} onChange={event=>changeLanguage(event.target.value)} aria-describedby="language-help"><option value="auto">Automatic · use my location</option>{Object.entries(LANGUAGE_NAMES).map(([code,name])=><option key={code} value={code}>{name}</option>)}</select><span aria-hidden="true">⌄</span></div><p id="language-help">Changes the greeting, couple’s names, countdown caption, portrait caption, scrolling blessing and invitation above. Copy this page’s URL to share your chosen language.</p><p className="language-status" role="status">{language==='auto'?`Automatic · ${LANGUAGE_NAMES[Object.keys(GREETINGS).find(key=>GREETINGS[key].lang===greeting.lang) || 'en']}`:`Selected · ${LANGUAGE_NAMES[language]}`}</p></div><Band/></footer><IiftRsvp /><Analytics /><SpeedInsights /></div>;
 }
