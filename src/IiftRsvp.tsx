@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './iift-rsvp.css';
 
-const message = 'Hey Venus! I’m coming to your wedding. Can’t wait to celebrate with you and Payal and catch up with the IIFT gang! — [Your name]';
+const message = 'Hey, I am coming';
 const whatsappLink = `https://wa.me/918285552458?text=${encodeURIComponent(message)}`;
 
 export function IiftRsvp() {
