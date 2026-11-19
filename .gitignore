@@ -4,3 +4,7 @@ dist/
 .env*
 !.env.example
 .DS_Store
+
+.local-metrics/
+
+.dashboard-access.txt

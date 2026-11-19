@@ -42,3 +42,14 @@ References: [Vercel request headers](https://vercel.com/docs/headers/request-hea
 Add `?lang=hi` for Hindi or `?lang=en` for English, before any section anchor (for example `https://vp-wedddng.vercel.app/?lang=hi#home`). A supported URL language overrides both location detection and a saved browser preference; `?lang=auto` explicitly uses location detection. Without a valid parameter, the saved preference applies, then location detection.
 
 Supported codes: `en`, `hi`, `bn`, `as`, `gu`, `mr`, `kok`, `kn`, `ml`, `ta`, `te`, `or`, `pa`, `ne`, `mni`, `lus`, `ur`, `es` (Spanish), `tr` (Turkish), `el` (Greek). The footer language selector updates the URL so the selected language can be shared. This controls the existing localized greeting, couple’s names, countdown caption, portrait caption, wedding event, scrolling blessing and footer invitation; the other components remain as designed. Travel origin still follows approximate location independently of the language.
+
+
+## Host metrics dashboard
+
+Open `/dashboard` and sign in using `METRICS_DASHBOARD_PASSWORD`. This server-only password signs a seven-day HttpOnly session cookie. Metrics reads require that cookie. Vercel Blob stores private event batches using the project’s `BLOB_READ_WRITE_TOKEN`.
+
+Capture covers anonymous visits, page views, foreground reading time, section and scroll milestones, WhatsApp clicks, venue directions, flight and rail links, selected origins, transport mode and languages. Approximate country/state is supplied by Vercel. Only referring hostnames and explicit campaign/source tags are retained. No IP addresses, WhatsApp messages or personal contact fields are stored. The collector respects Do Not Track. Clicks do not prove attendance or completed bookings.
+
+Reports use UTC calendar days, deduplicate retried event IDs and use the greatest reading-time heartbeat per page. Reads are bounded at 10,000 batches and explicitly show when a report is partial. Counts start at deployment, with no historical backfill. Private Blob storage uses the Vercel account’s usage allowance and billing.
+
+For local development, put `METRICS_DASHBOARD_PASSWORD=<your password>` in gitignored `.env.local`. Run `npm run dev:api` and `npm run dev` in separate terminals. Local capture is written to gitignored `.local-metrics/`; local browsing does not write to production storage. Local QA traffic is labelled with `utm_campaign=local-validation`. No sample data is preloaded. A shared URL can include `?utm_campaign=batchmates` to group its traffic.
