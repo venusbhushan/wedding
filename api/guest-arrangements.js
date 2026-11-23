@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       const clean = guests.map(guest => ({id: guest.id, done: guest.done, mode: guest.mode ?? '', ...Object.fromEntries(fields.map(field => [field, guest[field]]))}));
       const file = await put(pathname, JSON.stringify(clean), {
         access: 'private', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: version !== null,
-        ...(version === null ? {} : {ifMatch: version}),
+        ...(version === null ? {} : {ifMatch: version.replace(/^W\//, '')}),
       });
       return res.status(200).json({version: file.etag});
     }
