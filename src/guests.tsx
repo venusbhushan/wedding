@@ -4,10 +4,12 @@ import type { FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import "./guests.css";
 
-type Details = { name: string; origin: string; destination: string; date: string; time: string; departurePlace: string; departureDate: string; departureTime: string; notes: string };
+type Details = { name: string; origin: string; destination: string; mode: string; date: string; time: string; departurePlace: string; departureDate: string; departureTime: string; notes: string };
 type Guest = Details & { id: string; done: boolean };
 const key = "wedding-guest-arrangements-v1";
-const empty: Details = { name: "", origin: "", destination: "", date: "", time: "", departurePlace: "", departureDate: "", departureTime: "", notes: "" };
+const empty: Details = { name: "", origin: "", destination: "", mode: "", date: "", time: "", departurePlace: "", departureDate: "", departureTime: "", notes: "" };
+
+const travelModes = ["Train", "Road", "Car", "Air"];
 
 function formatDate(date: string) {
   return date ? new Date(date + "T12:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "";
@@ -51,7 +53,10 @@ function GuestOverview({ guests }: { guests: Guest[] }) {
   const progress = guests.length ? Math.round(done / guests.length * 100) : 0;
   const arrivals = new Map<string, number>();
   const destinations = new Map<string, number>();
+  const modes = new Map<string, number>();
   for (const guest of guests) {
+    const mode = guest.mode || "Not specified";
+    modes.set(mode, (modes.get(mode) ?? 0) + 1);
     if (guest.date) arrivals.set(guest.date, (arrivals.get(guest.date) ?? 0) + 1);
     destinations.set(guest.destination, (destinations.get(guest.destination) ?? 0) + 1);
   }
@@ -70,6 +75,10 @@ function GuestOverview({ guests }: { guests: Guest[] }) {
       <article><h3>Arrivals by day</h3>
         {arrivals.size ? <ul>{[...arrivals].sort(([a], [b]) => a.localeCompare(b)).map(([date, count]) =>
           <li key={date}><span>{formatDate(date)}</span><strong>{count}</strong><meter aria-label={formatDate(date) + " arrivals"} min={0} max={arrivalsMax} value={count}/></li>)}</ul> : <p>Arrival dates will appear here.</p>}
+      </article>
+      <article><h3>Travel modes</h3>
+        <ul>{[...travelModes, ...(modes.has("Not specified") ? ["Not specified"] : [])].map(mode =>
+          <li key={mode}><span>{mode}</span><strong>{modes.get(mode) ?? 0}</strong></li>)}</ul>
       </article>
       <article><h3>Arrival destinations</h3>
         {destinations.size ? <ul>{[...destinations].sort((a, b) => b[1] - a[1]).map(([place, count]) =>
@@ -96,6 +105,7 @@ function GuestTracker({ session }: { session?: Session }) {
   const [editing, setEditing] = useState<string | null>(null);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [travelMode, setTravelMode] = useState("");
   const [day, setDay] = useState("");
   const [notice, setNotice] = useState("");
 
@@ -144,6 +154,7 @@ function GuestTracker({ session }: { session?: Session }) {
   const query = search.trim().toLowerCase();
   const visible = guests.filter(guest =>
     (!day || guest.date === day) &&
+    (!travelMode || guest.mode === travelMode) &&
     (filter === "all" || guest.done === (filter === "done")) &&
     [guest.name, guest.origin, guest.destination, guest.departurePlace, guest.notes].some(value => value.toLowerCase().includes(query))
   ).sort((a, b) => a.date.localeCompare(b.date) || (a.time || "99").localeCompare(b.time || "99") || a.name.localeCompare(b.name));
@@ -173,6 +184,9 @@ function GuestTracker({ session }: { session?: Session }) {
             ["date", "Arrival date", "date", true],
             ["time", "Time (IST)", "time", false],
           ])}
+          <label>Travelling by<select value={draft.mode} onChange={event => setDraft({ ...draft, mode: event.target.value })}>
+            <option value="">Not specified</option>{travelModes.map(mode => <option key={mode}>{mode}</option>)}
+          </select></label>
         </div></fieldset>
         <fieldset><legend>Departure <small>Optional</small></legend><div className="fields">
           {renderFields([
@@ -194,13 +208,16 @@ function GuestTracker({ session }: { session?: Session }) {
       <div className="fields filters">
         <label>Search<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Name, city or notes"/></label>
         <label>Arrival date<input type="date" value={day} onChange={event => setDay(event.target.value)}/></label>
+        <label>Travel mode<select value={travelMode} onChange={event => setTravelMode(event.target.value)}>
+          <option value="">All modes</option>{travelModes.map(mode => <option key={mode}>{mode}</option>)}
+        </select></label>
         <label>Status<select value={filter} onChange={event => setFilter(event.target.value)}><option value="all">All arrangements</option><option value="pending">Pending</option><option value="done">Done</option></select></label>
       </div>
       {!visible.length && <p>{guests.length ? "No guests match these filters." : "Add your first guest to start tracking arrivals."}</p>}
       {visible.map(guest => <article key={guest.id}>
         <div className="guest-heading"><h3>{guest.name}</h3><span className={guest.done ? "badge done" : "badge"}>{guest.done ? "Done" : "Pending"}</span></div>
         <dl className="itinerary">
-          <div><dt>Arrival</dt><dd>{guest.origin && guest.origin + " → "}{guest.destination}</dd><dd>{formatDate(guest.date)}{guest.time && " · " + guest.time + " IST"}</dd></div>
+          <div><dt>Arrival</dt><dd>{guest.origin && guest.origin + " → "}{guest.destination}{guest.mode && " · " + guest.mode}</dd><dd>{formatDate(guest.date)}{guest.time && " · " + guest.time + " IST"}</dd></div>
           <div><dt>Departure</dt><dd>{[guest.departurePlace, formatDate(guest.departureDate), guest.departureTime && guest.departureTime + " IST"].filter(Boolean).join(" · ") || "To be confirmed"}</dd></div>
         </dl>
         {guest.notes && <p className="guest-notes">{guest.notes}</p>}

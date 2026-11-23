@@ -1,6 +1,7 @@
 import { get, put, BlobPreconditionFailedError } from '@vercel/blob';
 
 const pathname = 'guest-arrangements-v1.json';
+const travelModes = ['', 'Train', 'Road', 'Car', 'Air'];
 const fields = ['name', 'origin', 'destination', 'date', 'time', 'departurePlace', 'departureDate', 'departureTime', 'notes'];
 
 export default async function handler(req, res) {
@@ -17,11 +18,11 @@ export default async function handler(req, res) {
       if (!(version === null || typeof version === 'string') || !Array.isArray(guests) || guests.length > 500 ||
         !guests.every(guest => guest && typeof guest.id === 'string' && guest.id.length <= 100 && typeof guest.done === 'boolean' &&
           fields.every(field => typeof guest[field] === 'string' && guest[field].length <= (field === 'notes' ? 3000 : 200)) &&
-          guest.name && guest.destination && /^\d{4}-\d{2}-\d{2}$/.test(guest.date)) ||
+          travelModes.includes(guest.mode ?? '') && guest.name && guest.destination && /^\d{4}-\d{2}-\d{2}$/.test(guest.date)) ||
         new Set(guests.map(guest => guest.id)).size !== guests.length) {
         return res.status(400).json({error: 'Check the guest details and field lengths.'});
       }
-      const clean = guests.map(guest => ({id: guest.id, done: guest.done, ...Object.fromEntries(fields.map(field => [field, guest[field]]))}));
+      const clean = guests.map(guest => ({id: guest.id, done: guest.done, mode: guest.mode ?? '', ...Object.fromEntries(fields.map(field => [field, guest[field]]))}));
       const file = await put(pathname, JSON.stringify(clean), {
         access: 'private', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: version !== null,
         ...(version === null ? {} : {ifMatch: version}),
