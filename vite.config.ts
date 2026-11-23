@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
  plugins: [react()],
+ build: { rolldownOptions: { input: { wedding: "index.html", guests: "guests/index.html" } } },
  server: {
   proxy: {
    "/api": {
