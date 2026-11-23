@@ -1,17 +1,10 @@
-import { createHash, timingSafeEqual } from 'node:crypto';
 import { get, put, BlobPreconditionFailedError } from '@vercel/blob';
 
 const pathname = 'guest-arrangements-v1.json';
-const digest = value => createHash('sha256').update(value).digest();
 const fields = ['name', 'origin', 'destination', 'date', 'time', 'departurePlace', 'departureDate', 'departureTime', 'notes'];
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'private, no-store');
-  const password = process.env.GUEST_TRACKER_PASSWORD;
-  if (!password) return res.status(503).json({ error: 'Guest tracker is unavailable.' });
-  if (!timingSafeEqual(digest(req.headers.authorization ?? ''), digest('Bearer ' + password))) {
-    return res.status(401).json({ error: 'Enter the correct tracker password.' });
-  }
   try {
     if (req.method === 'GET') {
       const file = await get(pathname, {access: 'private', useCache: false});
@@ -39,7 +32,7 @@ export default async function handler(req, res) {
     return res.status(405).end();
   } catch (error) {
     if (error instanceof BlobPreconditionFailedError || /already exists/i.test(error?.message ?? "")) {
-      return res.status(409).json({error: 'Another device updated the list. Sign out and back in to load the latest entries.'});
+      return res.status(409).json({error: 'Another device updated the list. Reload the page to load the latest entries.'});
     }
     console.error('Guest storage request failed', error?.name);
     return res.status(503).json({error: 'Could not reach guest storage. Try again shortly.'});

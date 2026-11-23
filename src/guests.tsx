@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import "./guests.css";
@@ -13,12 +13,12 @@ function formatDate(date: string) {
   return date ? new Date(date + "T12:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "";
 }
 
-type Session = { password: string; guests: Guest[]; version: string | null };
+type Session = { guests: Guest[]; version: string | null };
 
-async function guestRequest(password: string, body?: { guests: Guest[]; version: string | null }) {
+async function guestRequest(body?: { guests: Guest[]; version: string | null }) {
   const response = await fetch("/api/guest-arrangements", {
     method: body ? "PUT" : "GET",
-    headers: { Authorization: "Bearer " + password, ...(body ? { "Content-Type": "application/json" } : {}) },
+    headers: body ? { "Content-Type": "application/json" } : {},
     body: body ? JSON.stringify(body) : undefined,
     cache: "no-store",
   });
@@ -27,35 +27,59 @@ async function guestRequest(password: string, body?: { guests: Guest[]; version:
   return result;
 }
 
-function GuestAccess() {
+function SharedGuestTracker() {
   const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    let active = true;
+    guestRequest().then(
+      result => { if (active) setSession(result); },
+      failure => { if (active) setError(failure.message); },
+    );
+    return () => { active = false; };
+  }, []);
 
-  if (session) return <GuestTracker session={session} onLock={() => setSession(null)}/>;
-  return <main><header><a href="/">← Wedding invitation</a><h1>Guest arrangements</h1></header>
-    <form onSubmit={async event => {
-      event.preventDefault();
-      const password = String(new FormData(event.currentTarget).get("password") ?? "");
-      setBusy(true);
-      setError("");
-      try {
-        const result = await guestRequest(password);
-        setSession({ password, guests: result.guests, version: result.version });
-      } catch (failure) {
-        setError(failure instanceof Error ? failure.message : "Could not unlock the tracker.");
-      } finally {
-        setBusy(false);
-      }
-    }}>
-      <label>Tracker password<input type="password" name="password" autoComplete="current-password" required/></label>
-      <div className="actions"><button disabled={busy}>{busy ? "Unlocking…" : "Unlock tracker"}</button></div>
-      {error && <p role="alert">{error}</p>}
-    </form>
-  </main>;
+  if (session) return <GuestTracker session={session}/>;
+  return <main><h1>Guest arrangements</h1><p role={error ? "alert" : "status"}>
+    {error || "Loading guest arrangements…"}
+  </p>{error && <button onClick={() => window.location.reload()}>Try again</button>}</main>;
 }
 
-function GuestTracker({ session, onLock }: { session?: Session; onLock?: () => void }) {
+function GuestOverview({ guests }: { guests: Guest[] }) {
+  const done = guests.filter(guest => guest.done).length;
+  const pending = guests.length - done;
+  const progress = guests.length ? Math.round(done / guests.length * 100) : 0;
+  const arrivals = new Map<string, number>();
+  const destinations = new Map<string, number>();
+  for (const guest of guests) {
+    if (guest.date) arrivals.set(guest.date, (arrivals.get(guest.date) ?? 0) + 1);
+    destinations.set(guest.destination, (destinations.get(guest.destination) ?? 0) + 1);
+  }
+
+  const arrivalsMax = Math.max(1, ...arrivals.values());
+
+  const destinationsMax = Math.max(1, ...destinations.values());
+
+  return <section className="guest-overview" aria-labelledby="guest-overview-title">
+    <h2 id="guest-overview-title">At a glance</h2>
+    <div className="overview-grid">
+      <article><h3>Arrangements</h3><strong>{done} of {guests.length} done</strong>
+        <div className="overview-track" aria-hidden="true"><span style={{ width: progress + "%" }}/></div>
+        <p>{pending} pending</p>
+      </article>
+      <article><h3>Arrivals by day</h3>
+        {arrivals.size ? <ul>{[...arrivals].sort(([a], [b]) => a.localeCompare(b)).map(([date, count]) =>
+          <li key={date}><span>{formatDate(date)}</span><strong>{count}</strong><meter aria-label={formatDate(date) + " arrivals"} min={0} max={arrivalsMax} value={count}/></li>)}</ul> : <p>Arrival dates will appear here.</p>}
+      </article>
+      <article><h3>Arrival destinations</h3>
+        {destinations.size ? <ul>{[...destinations].sort((a, b) => b[1] - a[1]).map(([place, count]) =>
+          <li key={place}><span>{place}</span><strong>{count}</strong><meter aria-label={place + " arrivals"} min={0} max={destinationsMax} value={count}/></li>)}</ul> : <p>Destinations will appear here.</p>}
+      </article>
+    </div>
+  </section>;
+}
+
+function GuestTracker({ session }: { session?: Session }) {
   const [initial] = useState(() => {
     if (session) return { guests: session.guests.map(guest => ({ ...empty, ...guest })), error: "" };
     try {
@@ -85,7 +109,7 @@ function GuestTracker({ session, onLock }: { session?: Session; onLock?: () => v
     setSaving(true);
     try {
       if (session) {
-        const result = await guestRequest(session.password, { guests: next, version: version.current });
+        const result = await guestRequest({ guests: next, version: version.current });
         version.current = result.version;
       } else localStorage.setItem(key, JSON.stringify(next));
       setGuests(next);
@@ -134,7 +158,8 @@ function GuestTracker({ session, onLock }: { session?: Session; onLock?: () => v
   }
 
   return <main>
-    <header><a href="/">← Wedding invitation</a><h1>Guest arrangements</h1><p>{session ? "Entries sync across devices." : "Entries are saved in this browser on this device."}</p>{onLock && <button type="button" className="secondary" disabled={saving} onClick={onLock}>Lock tracker</button>}</header>
+    <header><a href="/">← Wedding invitation</a><h1>Guest arrangements</h1><p>{session ? "Entries sync across devices." : "Entries are saved in this browser on this device."}</p></header>
+    <GuestOverview guests={guests}/>
     <form id="guest-form" onSubmit={submit}>
       <h2>{editing ? "Edit guest" : "Add a guest"}</h2>
       <div className="fields">
@@ -194,4 +219,4 @@ function GuestTracker({ session, onLock }: { session?: Session; onLock?: () => v
   </main>;
 }
 
-createRoot(document.getElementById("root")!).render(import.meta.env.DEV ? <GuestTracker/> : <GuestAccess/>);
+createRoot(document.getElementById("root")!).render(import.meta.env.DEV ? <GuestTracker/> : <SharedGuestTracker/>);
