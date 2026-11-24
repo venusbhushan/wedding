@@ -4,10 +4,10 @@ import type { FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import "./guests.css";
 
-type Details = { name: string; origin: string; destination: string; mode: string; date: string; time: string; departurePlace: string; departureDate: string; departureTime: string; notes: string };
+type Details = { name: string; familyMembers: number; origin: string; destination: string; mode: string; date: string; time: string; departurePlace: string; departureDate: string; departureTime: string; notes: string };
 type Guest = Details & { id: string; done: boolean };
 const key = "wedding-guest-arrangements-v1";
-const empty: Details = { name: "", origin: "", destination: "", mode: "", date: "", time: "", departurePlace: "", departureDate: "", departureTime: "", notes: "" };
+const empty: Details = { name: "", familyMembers: 0, origin: "", destination: "", mode: "", date: "", time: "", departurePlace: "", departureDate: "", departureTime: "", notes: "" };
 
 const travelModes = ["Train", "Road", "Car", "Air"];
 
@@ -55,10 +55,11 @@ function GuestOverview({ guests }: { guests: Guest[] }) {
   const destinations = new Map<string, number>();
   const modes = new Map<string, number>();
   for (const guest of guests) {
+    const people = 1 + guest.familyMembers;
     const mode = guest.mode || "Not specified";
-    modes.set(mode, (modes.get(mode) ?? 0) + 1);
-    if (guest.date) arrivals.set(guest.date, (arrivals.get(guest.date) ?? 0) + 1);
-    destinations.set(guest.destination, (destinations.get(guest.destination) ?? 0) + 1);
+    modes.set(mode, (modes.get(mode) ?? 0) + people);
+    if (guest.date) arrivals.set(guest.date, (arrivals.get(guest.date) ?? 0) + people);
+    destinations.set(guest.destination, (destinations.get(guest.destination) ?? 0) + people);
   }
 
   const arrivalsMax = Math.max(1, ...arrivals.values());
@@ -68,7 +69,7 @@ function GuestOverview({ guests }: { guests: Guest[] }) {
   return <section className="guest-overview" aria-labelledby="guest-overview-title">
     <h2 id="guest-overview-title">At a glance</h2>
     <div className="overview-grid">
-      <article><h3>Arrangements</h3><strong>{done} of {guests.length} done</strong>
+      <article><h3>Arrangements</h3><strong>{done} of {guests.length} parties done</strong>
         <div className="overview-track" aria-hidden="true"><span style={{ width: progress + "%" }}/></div>
         <p>{pending} pending</p>
       </article>
@@ -137,7 +138,10 @@ function GuestTracker({ session }: { session?: Session }) {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const details = Object.fromEntries((Object.keys(empty) as (keyof Details)[]).map(field => [field, draft[field].trim()])) as Details;
+    const details = Object.fromEntries((Object.keys(empty) as (keyof Details)[]).map(field => {
+      const value = draft[field];
+      return [field, typeof value === "string" ? value.trim() : value];
+    })) as Details;
     if (!details.name || !details.destination) {
       setError("Enter a guest name and arrival destination.");
       return;
@@ -160,7 +164,7 @@ function GuestTracker({ session }: { session?: Session }) {
   ).sort((a, b) => a.date.localeCompare(b.date) || (a.time || "99").localeCompare(b.time || "99") || a.name.localeCompare(b.name));
   const done = guests.filter(guest => guest.done).length;
 
-  function renderFields(fields: [keyof Details, string, string, boolean][]) {
+  function renderFields(fields: [Exclude<keyof Details, "familyMembers">, string, string, boolean][]) {
     return fields.map(([field, label, type, required]) =>
       <label key={field}>{label}<input type={type} required={required}
         list={field === "destination" || field === "departurePlace" ? "destinations" : undefined}
@@ -178,6 +182,11 @@ function GuestTracker({ session }: { session?: Session }) {
           ["name", "Guest name", "text", true],
           ["origin", "Travelling from (optional)", "text", false],
         ])}
+        <label>Additional family members (optional)
+          <input type="number" min={0} max={999} step={1} placeholder="0" value={draft.familyMembers || ""}
+            onChange={event => setDraft({ ...draft, familyMembers: Number(event.target.value) })} aria-describedby="family-count-help"/>
+          <small id="family-count-help">Exclude the guest named above.</small>
+        </label>
         <fieldset><legend>Arrival</legend><div className="fields">
           {renderFields([
             ["destination", "Arriving at", "text", true],
@@ -204,7 +213,7 @@ function GuestTracker({ session }: { session?: Session }) {
 
     <section aria-labelledby="arrivals">
       <h2 id="arrivals">Arrivals</h2>
-      <div className="totals"><span>{guests.length} guests</span><span>{guests.length - done} pending</span><span>{done} done</span></div>
+      <div className="totals"><span>{guests.reduce((total, guest) => total + 1 + guest.familyMembers, 0)} people</span><span>{guests.length} parties</span><span>{guests.length - done} pending</span><span>{done} done</span></div>
       <div className="fields filters">
         <label>Search<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Name, city or notes"/></label>
         <label>Arrival date<input type="date" value={day} onChange={event => setDay(event.target.value)}/></label>
@@ -217,6 +226,7 @@ function GuestTracker({ session }: { session?: Session }) {
       {visible.map(guest => <article key={guest.id}>
         <div className="guest-heading"><h3>{guest.name}</h3><span className={guest.done ? "badge done" : "badge"}>{guest.done ? "Done" : "Pending"}</span></div>
         <dl className="itinerary">
+          {guest.familyMembers > 0 && <div><dt>Party size</dt><dd>{guest.familyMembers + 1} people, including {guest.familyMembers} accompanying {guest.familyMembers === 1 ? "family member" : "family members"}</dd></div>}
           <div><dt>Arrival</dt><dd>{guest.origin && guest.origin + " → "}{guest.destination}{guest.mode && " · " + guest.mode}</dd><dd>{formatDate(guest.date)}{guest.time && " · " + guest.time + " IST"}</dd></div>
           <div><dt>Departure</dt><dd>{[guest.departurePlace, formatDate(guest.departureDate), guest.departureTime && guest.departureTime + " IST"].filter(Boolean).join(" · ") || "To be confirmed"}</dd></div>
         </dl>
